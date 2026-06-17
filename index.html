@@ -3,30 +3,31 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-  <title>Bensu için özel bir şey...</title>
-  <!-- Google Fonts for Outfit (Gaming Style) & Inter (Clean UI) -->
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <title>Bensu'nun Arenası 👑</title>
   
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&family=Outfit:wght@300;400;600;700;900&family=Inter:wght@400;600&display=swap" rel="stylesheet">
+
   <style>
     :root {
-      --bg-dark: #0f1020;
-      --bg-darker: #070811;
-      --gold: #ffd700;
-      --gold-light: #ffe652;
-      --gold-dark: #b8860b;
-      --purple: #6c63ff;
-      --purple-dark: #4c3fa6;
-      --teal: #00d4aa;
-      --teal-dark: #00bfa5;
+      --bg-dark: #0b091a;
+      --bg-gradient: radial-gradient(circle, #1a1638 0%, #070512 100%);
+      --purple-dark: #220335;
+      --elixir-purple: #bd00ff;
+      --elixir-glow: #ff7bfc;
+      --gold-primary: #ffd700;
+      --gold-secondary: #ffe652;
+      --gold-border: #d4af37;
+      --cyan-legendary: #00f0ff;
       
-      --common-glow: rgba(93, 109, 126, 0.4);
-      --rare-glow: rgba(255, 159, 0, 0.5);
-      --epic-glow: rgba(184, 46, 239, 0.6);
-      --legendary-glow: rgba(0, 255, 196, 0.7);
-      --champion-glow: rgba(255, 215, 0, 0.8);
-
-      --font-header: 'Outfit', system-ui, -apple-system, sans-serif;
-      --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+      /* Rarity Colors */
+      --common-border: #a1a1af;
+      --rare-border: #ff9000;
+      --epic-border: #bd00ff;
+      --legendary-border: #00f0ff;
+      --champion-border: #ffd700;
     }
 
     * {
@@ -34,1900 +35,2000 @@
       -webkit-tap-highlight-color: transparent;
     }
 
-    body {
+    body, html {
       margin: 0;
       padding: 0;
-      background: radial-gradient(circle at center, var(--bg-dark) 0%, var(--bg-darker) 100%);
-      color: #ffffff;
-      font-family: var(--font-body);
+      width: 100%;
+      height: 100%;
+      background-color: var(--bg-dark);
+      background-image: var(--bg-gradient);
+      font-family: 'Outfit', 'Inter', sans-serif;
+      color: #fff;
       overflow-x: hidden;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: flex-start;
+      user-select: none;
     }
 
-    /* Full-Screen Canvas for Confetti & Particles */
-    #confetti-canvas {
+    /* Background Canvas */
+    #particleCanvas {
       position: fixed;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: 99;
       pointer-events: none;
+      z-index: 1;
     }
 
-    /* --- LOADING SCREEN --- */
-    .screen-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100vw;
-      height: 100vh;
-      background: radial-gradient(circle at center, #1b1b3a 0%, #0a0a14 100%);
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      z-index: 100;
-      transition: opacity 0.8s ease, visibility 0.8s ease;
-    }
-    
-    .loading-container {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      width: 90%;
-      max-width: 400px;
-    }
-
-    .royal-text {
-      font-family: var(--font-header);
-      font-weight: 900;
-      text-transform: uppercase;
-      color: #ffffff;
-      text-shadow: 
-        -2.5px -2.5px 0 #000,  
-         2.5px -2.5px 0 #000,
-        -2.5px  2.5px 0 #000,
-         2.5px  2.5px 0 #000,
-        0px 5px 12px rgba(0,0,0,0.8),
-        0px 0px 15px rgba(108, 99, 255, 0.4);
-      letter-spacing: 1px;
-    }
-
-    .gold-text {
-      background: linear-gradient(to bottom, #ffe652 0%, #ffd700 45%, #c69320 90%, #8e6200 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      filter: drop-shadow(0px 2.5px 0px #000);
-    }
-
-    .loading-logo {
-      font-size: 2.3rem;
-      margin-bottom: 0.2rem;
-    }
-
-    .loading-subtitle {
-      font-size: 1rem;
-      color: #b0b0d0;
-      margin-bottom: 1.8rem;
-      font-family: var(--font-body);
-      font-weight: 500;
-      letter-spacing: 0.5px;
-    }
-
-    .loading-chest-wrapper {
-      margin-bottom: 1.5rem;
-      animation: float 3s ease-in-out infinite;
-    }
-
-    @keyframes float {
-      0% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-12px) rotate(1.5deg); }
-      100% { transform: translateY(0px) rotate(0deg); }
-    }
-
-    .svg-chest {
-      filter: drop-shadow(0 6px 15px rgba(0,0,0,0.6));
-    }
-
-    .glow-pulse {
-      animation: glowPulse 2s ease-in-out infinite;
-    }
-
-    @keyframes glowPulse {
-      0% { r: 35px; fill-opacity: 0.4; }
-      50% { r: 48px; fill-opacity: 0.75; }
-      100% { r: 35px; fill-opacity: 0.4; }
-    }
-
-    .gem-shine {
-      animation: gemShine 1.5s infinite alternate;
-    }
-
-    @keyframes gemShine {
-      0% { fill: #00ffff; filter: drop-shadow(0 0 2px #00ffff); }
-      100% { fill: #ffffff; filter: drop-shadow(0 0 8px #00ffff); }
-    }
-
-    .loading-bar-wrapper {
-      width: 100%;
-      height: 24px;
-      background: #121224;
-      border: 3.5px solid #3c3c5e;
-      border-radius: 12px;
-      overflow: hidden;
-      position: relative;
-      box-shadow: inset 0 3px 6px rgba(0,0,0,0.6);
-      margin-bottom: 0.8rem;
-    }
-
-    .loading-bar {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(to right, #ffd700, #ffe652, #ff9f1c);
-      box-shadow: 0 0 12px var(--gold);
-      border-radius: 8px;
-      transition: width 0.1s ease;
-      position: relative;
-    }
-
-    .loading-shine {
+    /* Screen Management */
+    .screen {
       position: absolute;
       top: 0;
       left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(
-        90deg,
-        rgba(255,255,255,0) 0%,
-        rgba(255,255,255,0.45) 50%,
-        rgba(255,255,255,0) 100%
-      );
-      animation: shine-sweep 1.8s infinite linear;
-      background-size: 200% 100%;
-    }
-
-    @keyframes shine-sweep {
-      0% { background-position: -150% 0; }
-      100% { background-position: 150% 0; }
-    }
-
-    .loading-status {
-      color: var(--gold-light);
-      font-size: 0.9rem;
-      margin-bottom: 2rem;
-      height: 20px;
-      font-weight: 600;
-      letter-spacing: 0.3px;
-    }
-
-    /* --- CLASH ROYALE BUTTONS --- */
-    .royal-btn {
-      font-family: var(--font-header);
-      font-size: 1.25rem;
-      font-weight: 900;
-      text-transform: uppercase;
-      padding: 14px 32px;
-      border: 4px solid #1c1303;
-      border-radius: 14px;
-      cursor: pointer;
-      outline: none;
-      transition: transform 0.1s ease, box-shadow 0.2s ease, filter 0.2s ease;
-      position: relative;
-      overflow: hidden;
-      box-shadow: 
-        0 6px 0 #1c1303,
-        0 12px 20px rgba(0,0,0,0.6);
-      text-shadow: 1px 1.5px 0px #000, -1px -1px 0px #000, 1px -1px 0px #000, -1px 1px 0px #000;
-      color: #fff;
-    }
-
-    .royal-btn:active {
-      transform: translateY(4px);
-      box-shadow: 
-        0 2px 0 #1c1303,
-        0 4px 10px rgba(0,0,0,0.6);
-    }
-
-    .gold-btn {
-      background: linear-gradient(to bottom, #ffe652 0%, #ffd700 40%, #f39c12 100%);
-      border-color: #3e2600;
-    }
-
-    .gold-btn:hover {
-      filter: brightness(1.1);
-    }
-
-    .purple-btn {
-      background: linear-gradient(to bottom, #a176ff 0%, #6c63ff 40%, #4c3fa6 100%);
-      border-color: #1e1136;
-      box-shadow: 
-        0 6px 0 #1e1136,
-        0 12px 20px rgba(0,0,0,0.6);
-    }
-
-    .purple-btn:active {
-      box-shadow: 
-        0 2px 0 #1e1136,
-        0 4px 10px rgba(0,0,0,0.6);
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    .fade-out {
-      opacity: 0 !important;
-      pointer-events: none;
-      visibility: hidden;
-    }
-
-    /* --- MAIN CONTAINER --- */
-    .main-container {
       width: 100%;
-      max-width: 1200px;
+      height: 100%;
+      opacity: 0;
+      pointer-events: none;
+      transform: scale(0.96);
+      transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      z-index: 2;
+      padding: 20px;
+    }
+
+    .screen.active {
+      opacity: 1;
+      pointer-events: auto;
+      transform: scale(1);
+    }
+
+    /* --- LOADING SCREEN --- */
+    #loadingScreen {
+      background: radial-gradient(circle, #25023a 0%, #08000f 100%);
+      z-index: 10;
+    }
+
+    .loading-container {
+      text-align: center;
+      width: 100%;
+      max-width: 450px;
       padding: 20px;
       display: flex;
       flex-direction: column;
       align-items: center;
-      transition: opacity 0.8s ease;
     }
 
-    .game-header {
-      text-align: center;
-      margin-top: 10px;
-      margin-bottom: 25px;
+    .golem-glow-logo {
+      width: 120px;
+      height: 120px;
+      margin-bottom: 20px;
+      filter: drop-shadow(0 0 15px var(--elixir-glow));
+      animation: floatLogo 3s ease-in-out infinite;
     }
 
-    .crown-icon {
-      font-size: 2.2rem;
-      filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5));
-      animation: pulseCrown 1.5s infinite alternate;
+    @keyframes floatLogo {
+      0%, 100% { transform: translateY(0) scale(1); }
+      50% { transform: translateY(-10px) scale(1.05); }
     }
 
-    @keyframes pulseCrown {
+    .game-title {
+      font-family: 'Luckiest Guy', sans-serif;
+      font-size: 3.2rem;
+      color: var(--gold-primary);
+      margin: 0 0 5px 0;
+      letter-spacing: 2px;
+      text-shadow: 
+        0 4px 0 #3b1402, 
+        0 -2px 0 #3b1402, 
+        2px 2px 0 #3b1402, 
+        -2px -2px 0 #3b1402, 
+        0 8px 16px rgba(0, 0, 0, 0.8);
+      animation: titlePulse 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes titlePulse {
       0% { transform: scale(1); }
-      100% { transform: scale(1.15) rotate(2deg); }
+      100% { transform: scale(1.02); }
     }
 
-    .header-title {
-      font-size: 2.6rem;
-      margin: 5px 0 0px 0;
-    }
-
-    .subtitle-desc {
-      color: #a4a4d6;
-      font-size: 0.95rem;
-      margin: 6px 0 0 0;
-      font-weight: 500;
-      letter-spacing: 0.5px;
-    }
-
-    /* --- STATUS PANEL --- */
-    .status-panel {
-      background: rgba(20, 20, 42, 0.7);
-      border: 3.5px solid #2d2654;
-      border-radius: 20px;
-      padding: 16px;
-      width: 90%;
-      max-width: 520px;
-      margin: 0 auto 10px auto;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 12px;
-      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-
-    .cards-counter {
-      font-family: var(--font-header);
+    .loading-status {
       font-size: 1.15rem;
-      font-weight: 800;
-      text-transform: uppercase;
-      color: #fff;
-      letter-spacing: 0.5px;
+      font-weight: 600;
+      color: #dfb3ff;
+      margin-bottom: 15px;
+      height: 25px;
+      font-style: italic;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
     }
 
-    /* Elixir Bar styling */
-    .elixir-bar-container {
-      display: flex;
-      align-items: center;
-      width: 100%;
-      position: relative;
-      padding-left: 48px;
-      box-sizing: border-box;
-    }
-
-    .elixir-bubble {
-      position: absolute;
-      left: -2px;
-      width: 56px;
-      height: 56px;
-      z-index: 3;
-      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
-      animation: pulseBubble 2s infinite ease-in-out;
-    }
-
-    @keyframes pulseBubble {
-      0% { transform: scale(1); }
-      50% { transform: scale(1.06); }
-      100% { transform: scale(1); }
-    }
-
-    .elixir-drop-svg {
-      width: 100%;
-      height: 100%;
-    }
-
-    .elixir-progress-track {
-      flex-grow: 1;
-      height: 28px;
-      background: #110d24;
-      border: 3.5px solid #4a525d;
-      border-radius: 15px;
+    .progress-bar-outer {
+      width: 85%;
+      height: 26px;
+      background: #140d24;
+      border: 3px solid #622f9c;
+      border-radius: 13px;
       overflow: hidden;
       position: relative;
-      box-shadow: inset 0 3px 5px rgba(0,0,0,0.7);
+      box-shadow: 0 4px 10px rgba(0,0,0,0.5), inset 0 2px 5px rgba(0,0,0,0.8);
+      margin-bottom: 15px;
     }
 
-    .elixir-fill {
-      width: 0%;
+    .progress-bar-inner {
       height: 100%;
-      background: linear-gradient(to bottom, #ff5efb 0%, #b82eef 50%, #7c04ad 100%);
-      box-shadow: 0 0 15px #ff5efb;
+      width: 0%;
+      background: linear-gradient(90deg, #bd00ff 0%, #ff5efb 50%, #bd00ff 100%);
+      background-size: 200% 100%;
+      box-shadow: 0 0 12px var(--elixir-glow), inset 0 2px 2px rgba(255,255,255,0.4);
       border-radius: 10px;
-      transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      transition: width 0.1s linear;
       position: relative;
     }
 
-    .elixir-shine {
-      position: absolute;
-      top: 0;
-      left: 0;
-      right: 0;
-      bottom: 0;
-      background: linear-gradient(
-        90deg,
-        rgba(255,255,255,0) 0%,
-        rgba(255,255,255,0.4) 50%,
-        rgba(255,255,255,0) 100%
-      );
-      animation: shine-sweep 2.2s infinite linear;
-      background-size: 200% 100%;
+    .progress-percentage {
+      font-family: 'Luckiest Guy', sans-serif;
+      font-size: 1rem;
+      color: #fff;
+      margin-top: 5px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.8);
     }
 
-    .elixir-label {
-      position: absolute;
-      right: 15px;
-      font-family: var(--font-header);
-      font-weight: 900;
-      font-size: 0.8rem;
-      color: rgba(255, 255, 255, 0.7);
-      pointer-events: none;
-      text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
-      letter-spacing: 1.5px;
-    }
-
-    /* --- CARDS GRID --- */
-    .cards-deck {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
-      gap: 22px;
-      max-width: 1100px;
-      width: 95%;
-      margin: 1.5rem auto 3rem auto;
-      justify-content: center;
-      perspective: 1200px;
-      transition: opacity 0.6s ease, transform 0.6s ease;
-    }
-
-    /* Card Container with initial state for stagger entry */
-    .card-container {
-      width: 210px;
-      height: 310px;
-      margin: 0 auto;
-      perspective: 1200px;
+    /* Enter Button (Fades in) */
+    .btn-enter-arena {
+      display: none;
+      background: linear-gradient(180deg, #ffe082 0%, #ffb300 100%);
+      border: 3px solid #ffffff;
+      border-radius: 16px;
+      color: #3e2723;
+      font-family: 'Luckiest Guy', sans-serif;
+      font-size: 1.5rem;
+      padding: 12px 40px;
       cursor: pointer;
-      opacity: 0;
-      transform: translateY(40px) rotate(2deg) scale(0.9);
+      box-shadow: 0 6px 0 #b78103, 0 12px 24px rgba(189,0,255,0.5);
+      text-shadow: 0 1px 1px rgba(255,255,255,0.6);
+      transition: transform 0.1s, box-shadow 0.1s;
+      animation: enterPulse 1.5s infinite alternate;
+      margin-top: 20px;
+      outline: none;
     }
 
-    /* The actual rotating card */
-    .card {
+    .btn-enter-arena:hover {
+      filter: brightness(1.15);
+    }
+
+    .btn-enter-arena:active {
+      transform: translateY(4px);
+      box-shadow: 0 2px 0 #b78103, 0 6px 12px rgba(189,0,255,0.5);
+    }
+
+    @keyframes enterPulse {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.05); }
+    }
+
+
+    /* --- MAIN ARENA SCREEN --- */
+    #arenaScreen {
+      justify-content: flex-start;
+      overflow-y: auto;
+      padding-top: 25px;
+      padding-bottom: 130px; /* Space for the fixed bottom bar */
+    }
+
+    .arena-header {
       width: 100%;
-      height: 100%;
+      max-width: 900px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 25px;
+      padding: 0 10px;
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+
+    .trophy-box {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: linear-gradient(180deg, #1b2856 0%, #0a1130 100%);
+      border: 3.5px solid var(--gold-border);
+      padding: 6px 16px;
+      border-radius: 24px;
+      box-shadow: 0 6px 12px rgba(0, 0, 0, 0.5), inset 0 2px 2px rgba(255,255,255,0.2);
+      font-family: 'Luckiest Guy', sans-serif;
+      color: var(--gold-secondary);
+      font-size: 1.25rem;
+      text-shadow: 0 2px 2px rgba(0,0,0,0.8);
+    }
+
+    .trophy-icon {
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.4));
+      animation: trophyFloat 2s ease-in-out infinite alternate;
+    }
+
+    @keyframes trophyFloat {
+      0% { transform: translateY(0) rotate(0); }
+      100% { transform: translateY(-3px) rotate(5deg); }
+    }
+
+    .arena-title-group {
+      text-align: center;
+      flex-grow: 1;
+    }
+
+    .arena-title {
+      font-family: 'Luckiest Guy', sans-serif;
+      font-size: 2.6rem;
+      color: var(--gold-primary);
+      text-shadow: 
+        0 3px 0 #3a1402, 
+        0 -1px 0 #3a1402, 
+        1px 1px 0 #3a1402, 
+        -1px -1px 0 #3a1402, 
+        2px 5px 10px rgba(0,0,0,0.6);
+      margin: 0;
+      letter-spacing: 1px;
+    }
+
+    .arena-subtitle {
+      font-size: 1.15rem;
+      color: #dfd8ff;
+      margin-top: 4px;
+      font-weight: 700;
+      letter-spacing: 0.5px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    }
+
+
+    /* --- CARD DECK STYLING --- */
+    .deck-container {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(170px, 1fr));
+      gap: 20px;
+      width: 100%;
+      max-width: 1000px;
+      margin: 10px auto;
+      padding: 0 15px;
+    }
+
+    @media (max-width: 800px) {
+      .deck-container {
+        grid-template-columns: repeat(3, 1fr);
+      }
+    }
+
+    @media (max-width: 600px) {
+      .deck-container {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 15px;
+      }
+    }
+
+    @media (max-width: 380px) {
+      .deck-container {
+        grid-template-columns: 1fr;
+        max-width: 200px;
+      }
+    }
+
+    .card-wrapper {
+      display: flex;
+      justify-content: center;
+      perspective: 1000px;
+    }
+
+    .card {
+      width: 175px;
+      height: 265px;
       position: relative;
       transform-style: preserve-3d;
-      transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
-      border-radius: 18px;
-    }
-
-    .card:hover {
-      transform: translateY(-8px);
+      transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s;
+      cursor: pointer;
+      border-radius: 16px;
     }
 
     .card.flipped {
       transform: rotateY(180deg);
     }
 
-    .card.flipped:hover {
-      transform: rotateY(180deg) translateY(-8px);
-    }
-
-    /* Card Sides */
-    .card-front, .card-back {
+    .card-face {
       position: absolute;
       width: 100%;
       height: 100%;
       backface-visibility: hidden;
-      border-radius: 18px;
-      border: 4.5px solid #1c1503;
+      border-radius: 16px;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      padding: 10px;
+      overflow: hidden;
+    }
+
+    /* Rarity Glow Styles & Border Styles */
+    .card.common { box-shadow: 0 6px 12px rgba(161, 161, 175, 0.25); }
+    .card.common .card-face { border: 4px solid var(--common-border); }
+
+    .card.rare { box-shadow: 0 6px 15px rgba(255, 144, 0, 0.3); }
+    .card.rare .card-face { border: 4px solid var(--rare-border); }
+
+    .card.epic { box-shadow: 0 6px 18px rgba(189, 0, 255, 0.4); }
+    .card.epic .card-face { border: 4px solid var(--epic-border); }
+
+    .card.legendary { box-shadow: 0 6px 22px rgba(0, 240, 255, 0.55); }
+    .card.legendary .card-face { border: 4px solid var(--legendary-border); }
+
+    .card.champion { box-shadow: 0 6px 26px rgba(255, 215, 0, 0.7); }
+    .card.champion .card-face { border: 4px solid var(--champion-border); }
+
+    /* CARD FRONT (UNOPENED) */
+    .card-front {
+      background: radial-gradient(circle, #221e46 0%, #0d0c1c 100%);
+      color: white;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    /* Patterned back of cards */
+    .card-front::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background-image: radial-gradient(rgba(255,255,255,0.03) 2px, transparent 0);
+      background-size: 16px 16px;
+      pointer-events: none;
+    }
+
+    .front-glow-aura {
+      position: absolute;
+      top: 50%; left: 50%;
+      transform: translate(-50%, -50%);
+      width: 120px; height: 120px;
+      border-radius: 50%;
+      filter: blur(15px);
+      opacity: 0.15;
+      pointer-events: none;
+    }
+    .card.common .front-glow-aura { background: var(--common-border); }
+    .card.rare .front-glow-aura { background: var(--rare-border); }
+    .card.epic .front-glow-aura { background: var(--epic-border); }
+    .card.legendary .front-glow-aura { background: var(--legendary-border); opacity: 0.35; }
+    .card.champion .front-glow-aura { background: var(--champion-border); opacity: 0.4; }
+
+    .question-mark {
+      font-size: 3.8rem;
+      font-weight: 900;
+      color: var(--gold-secondary);
+      margin-top: 30px;
+      text-shadow: 0 4px 8px rgba(0,0,0,0.6), 0 0 10px rgba(255,215,0,0.3);
+      animation: qPulse 2s ease-in-out infinite alternate;
+      z-index: 2;
+    }
+
+    @keyframes qPulse {
+      0% { transform: scale(1) rotate(-5deg); }
+      100% { transform: scale(1.08) rotate(5deg); }
+    }
+
+    .card-category {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 0.95rem;
+      color: #dfd5ff;
+      text-align: center;
+      z-index: 2;
+      letter-spacing: 0.5px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+      margin-bottom: 10px;
+    }
+
+    .btn-card-action {
+      background: linear-gradient(180deg, #ffd54f 0%, #ffb300 100%);
+      border: 2px solid #ff8f00;
+      border-radius: 10px;
+      color: #3e2723;
+      font-family: 'Luckiest Guy', sans-serif;
+      font-size: 0.9rem;
+      padding: 6px 20px;
+      cursor: pointer;
+      box-shadow: 0 4px 0 #b78103, 0 6px 8px rgba(0,0,0,0.4);
+      text-shadow: 0 1px 0 rgba(255,255,255,0.4);
+      transition: transform 0.1s;
+      outline: none;
+      z-index: 3;
+      margin-bottom: 10px;
+    }
+
+    .btn-card-action:hover {
+      filter: brightness(1.1);
+    }
+
+    .btn-card-action:active {
+      transform: translateY(2px);
+      box-shadow: 0 2px 0 #b78103, 0 3px 4px rgba(0,0,0,0.4);
+    }
+
+    /* CARD BACK (OPENED) */
+    .card-back {
+      background: radial-gradient(circle, #19143a 0%, #060512 100%);
+      transform: rotateY(180deg);
+      color: white;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .rarity-banner {
+      width: calc(100% + 20px);
+      margin-top: -10px;
+      padding: 4px 0;
+      font-family: 'Luckiest Guy', sans-serif;
+      font-size: 0.8rem;
+      color: white;
+      text-align: center;
+      letter-spacing: 1px;
+      box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+      border-bottom: 2px solid rgba(255,255,255,0.15);
+    }
+    .card.common .rarity-banner { background: linear-gradient(90deg, #607d8b 0%, #90a4ae 50%, #607d8b 100%); }
+    .card.rare .rarity-banner { background: linear-gradient(90deg, #e65100 0%, #ffb74d 50%, #e65100 100%); }
+    .card.epic .rarity-banner { background: linear-gradient(90deg, #4a148c 0%, #ba68c8 50%, #4a148c 100%); }
+    .card.legendary .rarity-banner { background: linear-gradient(90deg, #006064 0%, #4dd0e1 50%, #006064 100%); }
+    .card.champion .rarity-banner { background: linear-gradient(90deg, #e65100 0%, #ffd54f 50%, #e65100 100%); }
+
+    /* Shimmering sweeping light for Legendary/Champion */
+    .shimmer-effect::after {
+      content: '';
+      position: absolute;
+      top: -50%; left: -60%; width: 200%; height: 200%;
+      background: linear-gradient(
+        45deg,
+        rgba(255,255,255,0) 30%,
+        rgba(255,255,255,0.25) 50%,
+        rgba(255,255,255,0) 70%
+      );
+      transform: rotate(30deg);
+      animation: shimmerSweep 3.5s infinite;
+      pointer-events: none;
+    }
+
+    @keyframes shimmerSweep {
+      0% { transform: translate(-100%, -100%) rotate(30deg); }
+      100% { transform: translate(100%, 100%) rotate(30deg); }
+    }
+
+    .card-body {
+      flex-grow: 1;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      margin: 5px 0;
+    }
+
+    .emoji-wrapper {
+      font-size: 2.1rem;
+      margin-bottom: 3px;
+      background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%);
+      width: 48px;
+      height: 48px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      border-radius: 50%;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.3));
+    }
+
+    .card-title {
+      font-family: 'Outfit', sans-serif;
+      font-weight: 800;
+      font-size: 0.92rem;
+      color: var(--gold-secondary);
+      margin-bottom: 5px;
+      letter-spacing: 0.3px;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.6);
+      text-align: center;
+    }
+
+    .card-text {
+      font-family: 'Outfit', sans-serif;
+      font-size: 0.68rem;
+      line-height: 1.32;
+      color: #eae6ff;
+      margin: 0;
+      padding: 0 4px;
+      font-weight: 400;
+      text-align: center;
+      overflow-y: auto;
+      max-height: 110px;
+    }
+
+    /* Scrollbar styling for card text */
+    .card-text::-webkit-scrollbar {
+      width: 3px;
+    }
+    .card-text::-webkit-scrollbar-thumb {
+      background: rgba(255,255,255,0.2);
+      border-radius: 2px;
+    }
+
+    .card-footer {
+      font-family: 'Luckiest Guy', sans-serif;
+      font-size: 0.72rem;
+      color: #3bf045;
+      text-shadow: 0 1px 2px rgba(0,0,0,0.8), 0 0 5px rgba(59,240,69,0.3);
+      animation: collectPulse 1.5s infinite alternate;
+      margin-bottom: 2px;
+    }
+
+    @keyframes collectPulse {
+      0% { opacity: 0.6; transform: scale(0.95); }
+      100% { opacity: 1; transform: scale(1.05); }
+    }
+
+
+    /* --- FIXED BOTTOM BAR (ELIXIR SYSTEMS) --- */
+    .bottom-bar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background: linear-gradient(0deg, rgba(8, 6, 18, 0.98) 0%, rgba(16, 12, 32, 0.9) 100%);
+      backdrop-filter: blur(10px);
+      border-top: 3.5px solid #481e6e;
+      padding: 12px 20px;
       box-sizing: border-box;
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: space-between;
-      padding: 14px;
-      overflow: hidden;
-      background-image: 
-        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.02) 1.5px, transparent 1.5px), 
-        radial-gradient(circle at 0 0, rgba(255, 255, 255, 0.02) 1.5px, transparent 1.5px);
-      background-size: 16px 16px;
+      z-index: 8;
+      box-shadow: 0 -5px 15px rgba(0,0,0,0.5);
     }
 
-    /* Front side styling */
-    .card-front {
-      background-color: #110f27;
-      background-image: 
-        radial-gradient(circle at center, #27225c 0%, #0d0b21 100%),
-        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.02) 1.5px, transparent 1.5px);
+    .bottom-bar-content {
+      width: 100%;
+      max-width: 600px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .elixir-bar-container {
+      width: 100%;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-top: 4px;
+    }
+
+    .golem-avatar-box {
+      width: 50px;
+      height: 50px;
+      flex-shrink: 0;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: #110824;
+      border: 2px solid var(--elixir-purple);
+      border-radius: 50%;
+      box-shadow: 0 0 10px rgba(189,0,255,0.4), inset 0 2px 5px rgba(0,0,0,0.8);
+      animation: avatarPulse 2.5s infinite alternate;
+    }
+
+    @keyframes avatarPulse {
+      0% { transform: scale(1); box-shadow: 0 0 8px rgba(189,0,255,0.3); }
+      100% { transform: scale(1.08); box-shadow: 0 0 16px rgba(189,0,255,0.7); }
+    }
+
+    .golem-avatar-box svg {
+      width: 85%;
+      height: 85%;
+    }
+
+    .elixir-badge {
+      position: absolute;
+      bottom: -6px;
+      right: -6px;
+      background: linear-gradient(180deg, #ff9eff 0%, #bd00ff 100%);
+      border: 2.5px solid #ffffff;
       color: #fff;
-      box-shadow: inset 0 0 20px rgba(0,0,0,0.7);
+      font-family: 'Luckiest Guy', sans-serif;
+      font-size: 0.9rem;
+      width: 25px;
+      height: 25px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      box-shadow: 0 3px 6px rgba(0,0,0,0.5);
+      z-index: 2;
     }
 
-    /* Shimmery scanline overlay on Card Front */
-    .card-front::before {
-      content: '';
+    .elixir-bar-wrapper {
+      flex-grow: 1;
+      height: 25px;
+      background: #190e24;
+      border: 3px solid #6c329b;
+      border-radius: 12px;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.6), inset 0 2px 4px rgba(0,0,0,0.8);
+    }
+
+    .elixir-bar-fill {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #bd00ff 0%, #ff66fc 50%, #bd00ff 100%);
+      background-size: 200% 100%;
+      box-shadow: 0 0 12px var(--elixir-glow), inset 0 2px 2px rgba(255,255,255,0.3);
+      border-radius: 8px;
+      transition: width 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+      position: relative;
+      animation: elixirFlow 2s linear infinite;
+    }
+
+    @keyframes elixirFlow {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    .elixir-bar-grid {
       position: absolute;
       top: 0;
       left: 0;
       width: 100%;
       height: 100%;
-      background: linear-gradient(
-        to bottom,
-        rgba(255, 255, 255, 0) 0%,
-        rgba(255, 255, 255, 0.03) 50%,
-        rgba(255, 255, 255, 0) 100%
-      );
-      background-size: 100% 4px;
+      display: flex;
+      justify-content: space-between;
       pointer-events: none;
     }
 
-    /* Diagonal glare highlight when hovered */
-    .card-front::after {
-      content: '';
-      position: absolute;
-      top: -60%;
-      left: -60%;
-      width: 220%;
-      height: 220%;
-      background: linear-gradient(
-        45deg,
-        rgba(255, 255, 255, 0) 0%,
-        rgba(255, 255, 255, 0) 45%,
-        rgba(255, 255, 255, 0.15) 50%,
-        rgba(255, 255, 255, 0) 55%,
-        rgba(255, 255, 255, 0) 100%
-      );
-      transform: rotate(45deg);
-      pointer-events: none;
-      transition: transform 0.5s ease;
+    .elixir-bar-grid span {
+      width: 2.5px;
+      height: 100%;
+      background-color: rgba(0, 0, 0, 0.45);
     }
 
-    .card-container:hover .card-front::after {
-      animation: shine-sweep-card 1.2s forwards;
-    }
-
-    @keyframes shine-sweep-card {
-      0% { transform: translate(-30%, -30%) rotate(45deg); }
-      100% { transform: translate(30%, 30%) rotate(45deg); }
-    }
-
-    /* Mini Cost Badge inside card */
-    .elixir-badge {
-      position: absolute;
-      top: 8px;
-      left: 8px;
-      width: 32px;
-      height: 32px;
-      background: linear-gradient(135deg, #e040fb, #b82eef);
-      border: 2px solid #ffffff;
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-family: var(--font-header);
-      font-weight: 900;
-      font-size: 1.1rem;
-      box-shadow: 0 3px 5px rgba(0,0,0,0.5);
-      color: white;
-      z-index: 5;
-    }
-
-    .card-decor {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      font-size: 1.1rem;
-      opacity: 0.75;
-      color: var(--gold);
-    }
-
-    .front-main {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      flex-grow: 1;
-      gap: 15px;
-      margin-top: 15px;
-    }
-
-    .front-emoji {
-      font-size: 3.5rem;
-      filter: drop-shadow(0 0 10px rgba(108, 99, 255, 0.5));
-      animation: pulseEmoji 2s infinite alternate;
-    }
-
-    @keyframes pulseEmoji {
-      0% { transform: scale(1); filter: drop-shadow(0 0 8px rgba(108, 99, 255, 0.4)); }
-      100% { transform: scale(1.08); filter: drop-shadow(0 0 18px rgba(108, 99, 255, 0.8)); }
-    }
-
-    .front-label {
-      font-family: var(--font-header);
-      font-size: 1.2rem;
-      font-weight: 800;
-      text-align: center;
-      color: #fff;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.8);
-      letter-spacing: 0.3px;
-    }
-
-    .front-reveal-btn {
-      background: linear-gradient(to bottom, #00ffcc, #008f72);
-      border: 2px solid #00221a;
-      border-radius: 8px;
-      padding: 6px 16px;
-      color: white;
-      font-family: var(--font-header);
-      font-weight: 800;
-      font-size: 0.85rem;
-      text-transform: uppercase;
+    .card-counter-label {
+      font-family: 'Luckiest Guy', sans-serif;
+      font-size: 1.15rem;
+      color: #dfd5ff;
       letter-spacing: 0.5px;
-      box-shadow: 0 3px 0 #00221a;
-      margin-bottom: 5px;
-      pointer-events: none; /* Clicking the card container triggers the flip */
+      text-shadow: 0 2px 3px rgba(0,0,0,0.8);
     }
 
-    /* Back side styling */
-    .card-back {
-      background: linear-gradient(135deg, #1b213b 0%, #0c0e1a 100%);
-      transform: rotateY(180deg);
-      box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
-    }
 
-    /* Rarity Frame borders and glowing aura */
-    .card.rarity-common { border-color: #5d6d7e; }
-    .card.rarity-common .card-back { border-color: #5d6d7e; box-shadow: 0 0 12px var(--common-glow), inset 0 0 20px rgba(0,0,0,0.8); }
-
-    .card.rarity-rare { border-color: #ff9f00; }
-    .card.rarity-rare .card-back { border-color: #ff9f00; box-shadow: 0 0 16px var(--rare-glow), inset 0 0 20px rgba(0,0,0,0.8); }
-
-    .card.rarity-epic { border-color: #b82eef; }
-    .card.rarity-epic .card-back { border-color: #b82eef; box-shadow: 0 0 18px var(--epic-glow), inset 0 0 20px rgba(0,0,0,0.8); }
-
-    .card.rarity-legendary { border-color: #00ffc4; }
-    .card.rarity-legendary .card-back { border-color: #00ffc4; box-shadow: 0 0 22px var(--legendary-glow), inset 0 0 20px rgba(0,0,0,0.8); }
-
-    .card.rarity-champion { border-color: #ffd700; }
-    .card.rarity-champion .card-back { border-color: #ffd700; box-shadow: 0 0 25px var(--champion-glow), inset 0 0 20px rgba(0,0,0,0.8); }
-
-    .rarity-banner {
-      font-family: var(--font-header);
-      font-weight: 900;
-      font-size: 0.72rem;
-      letter-spacing: 1px;
-      padding: 3px 10px;
-      border-radius: 10px;
-      text-transform: uppercase;
-      color: white;
-      margin-top: 3px;
-    }
-    .rarity-common .rarity-banner { background: #5d6d7e; }
-    .rarity-rare .rarity-banner { background: #ff9f00; }
-    .rarity-epic .rarity-banner { background: #b82eef; }
-    .rarity-legendary .rarity-banner { background: #00ffc4; color: #070811; }
-    .rarity-champion .rarity-banner { background: #ffd700; color: #070811; }
-
-    .back-emoji-holder {
-      width: 58px;
-      height: 58px;
-      background: rgba(255,255,255,0.06);
-      border: 2px solid rgba(255,255,255,0.15);
-      border-radius: 50%;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      font-size: 2rem;
-      margin: 8px 0;
-      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
-    }
-    
-    .rarity-common .back-emoji-holder { border-color: rgba(93, 109, 126, 0.4); }
-    .rarity-rare .back-emoji-holder { border-color: rgba(255, 159, 0, 0.6); box-shadow: 0 0 10px rgba(255, 159, 0, 0.3); }
-    .rarity-epic .back-emoji-holder { border-color: rgba(184, 46, 239, 0.6); box-shadow: 0 0 10px rgba(184, 46, 239, 0.3); }
-    .rarity-legendary .back-emoji-holder { border-color: rgba(0, 255, 196, 0.6); box-shadow: 0 0 12px rgba(0, 255, 196, 0.4); }
-    .rarity-champion .back-emoji-holder { border-color: rgba(255, 215, 0, 0.6); box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); }
-
-    .back-title {
-      font-family: var(--font-header);
-      font-size: 1.1rem;
-      font-weight: 900;
-      text-align: center;
-      color: #fff;
-      margin-bottom: 6px;
-      letter-spacing: 0.3px;
-    }
-
-    .back-text {
-      font-size: 0.8rem;
-      line-height: 1.45;
-      color: #d8daf0;
-      text-align: center;
-      flex-grow: 1;
-      overflow-y: auto;
-      padding: 0 4px;
-      font-weight: 500;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .back-footer {
-      font-family: var(--font-header);
-      font-size: 0.8rem;
-      font-weight: 800;
-      color: var(--teal);
-      margin-top: 8px;
-      text-transform: uppercase;
-      letter-spacing: 1px;
-    }
-
-    /* --- CHEST TRIGGER SECTION --- */
-    .chest-trigger-section {
-      display: flex;
+    /* --- LEGENDARY CHEST REVEAL SECTION --- */
+    #chestSection {
+      display: none;
       flex-direction: column;
       align-items: center;
       justify-content: center;
-      margin: 1.5rem auto 3rem auto;
-      width: 90%;
+      width: 100%;
       max-width: 500px;
+      margin: 15px auto;
       text-align: center;
-      animation: fadeInScale 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      animation: chestFadeIn 0.8s ease forwards;
     }
 
-    @keyframes fadeInScale {
-      0% { opacity: 0; transform: scale(0.8); }
+    @keyframes chestFadeIn {
+      0% { opacity: 0; transform: scale(0.9); }
       100% { opacity: 1; transform: scale(1); }
     }
 
-    .achievement-banner {
-      font-size: 1.6rem;
-      background: linear-gradient(to right, #ffd700, #ffe652, #ffd700);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      margin-bottom: 0.5rem;
-      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
+    .chest-title {
+      font-family: 'Luckiest Guy', sans-serif;
+      font-size: 2rem;
+      color: var(--gold-primary);
+      text-shadow: 
+        0 3px 0 #3a1402,
+        0 0 15px rgba(255,215,0,0.5);
+      margin-bottom: 5px;
+      animation: titleGlow 1.5s infinite alternate;
     }
 
-    .chest-hint {
-      font-size: 0.95rem;
-      color: #00ffc4;
-      margin-bottom: 1.5rem;
-      font-family: var(--font-body);
-      font-weight: 600;
-      text-shadow: 0 0 10px rgba(0, 255, 196, 0.3);
-      letter-spacing: 0.5px;
+    @keyframes titleGlow {
+      0% { text-shadow: 0 3px 0 #3a1402, 0 0 10px rgba(255,215,0,0.3); }
+      100% { text-shadow: 0 3px 0 #3a1402, 0 0 25px rgba(255,215,0,0.8); }
     }
 
-    .legendary-chest {
+    .chest-wrapper {
       cursor: pointer;
+      position: relative;
       width: 200px;
       height: 200px;
-      transition: transform 0.3s ease;
-      position: relative;
+      margin: 10px auto;
+      transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      animation: floatChest 3s ease-in-out infinite;
     }
 
-    .legendary-chest:hover {
+    .chest-wrapper:hover {
       transform: scale(1.08);
     }
 
-    /* Glowing animations for chest */
-    .legendary-aurapulse {
-      animation: auraPulse 2.2s infinite ease-in-out;
+    @keyframes floatChest {
+      0%, 100% { transform: translateY(0); }
+      50% { transform: translateY(-12px); }
     }
 
-    @keyframes auraPulse {
-      0% { r: 40px; fill-opacity: 0.45; }
-      50% { r: 54px; fill-opacity: 0.9; filter: drop-shadow(0 0 18px #00ffcc); }
-      100% { r: 40px; fill-opacity: 0.45; }
+    .chest-wrapper.shaking {
+      animation: shakeChest 0.08s infinite !important;
     }
 
-    .legendary-crystal-pulse {
-      animation: crystalPulse 1.2s infinite alternate;
+    @keyframes shakeChest {
+      0% { transform: translate(1px, 1px) rotate(0deg); }
+      20% { transform: translate(-2px, -1px) rotate(-1deg); }
+      40% { transform: translate(-1px, 2px) rotate(1deg); }
+      60% { transform: translate(2px, 1px) rotate(-1deg); }
+      80% { transform: translate(-1px, -1px) rotate(1deg); }
+      100% { transform: translate(1px, 2px) rotate(0deg); }
     }
 
-    @keyframes crystalPulse {
-      0% { fill: #00ffff; filter: drop-shadow(0 0 2px #00ffff); }
-      100% { fill: #ffffff; filter: drop-shadow(0 0 12px #00ffff); }
+    .chest-instructions {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: #dfd5ff;
+      margin-top: 10px;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+      animation: instructionPulse 1.2s infinite alternate;
     }
 
-    /* Chest Open Shake animation */
-    .opening-shake {
-      animation: chestShake 1.4s forwards;
+    @keyframes instructionPulse {
+      0% { opacity: 0.6; }
+      100% { opacity: 1; }
     }
 
-    @keyframes chestShake {
-      0% { transform: translate(0, 0) rotate(0deg) scale(1); }
-      10% { transform: translate(-6px, -3px) rotate(-4deg) scale(1.05); }
-      20% { transform: translate(6px, 3px) rotate(4deg) scale(1.05); }
-      30% { transform: translate(-6px, 3px) rotate(-4deg) scale(1.1); }
-      40% { transform: translate(6px, -3px) rotate(4deg) scale(1.1); }
-      50% { transform: translate(-3px, 3px) rotate(-2deg) scale(1.15); }
-      60% { transform: translate(3px, -3px) rotate(2deg) scale(1.15); }
-      70% { transform: translate(-3px, -3px) rotate(-2deg) scale(1.2); }
-      80% { transform: translate(3px, 3px) rotate(2deg) scale(1.2); }
-      90% { transform: translate(0, 0) rotate(0deg) scale(1.25); }
-      100% { transform: translate(0, 0) rotate(0deg) scale(1.35); opacity: 0; }
-    }
 
-    /* --- THE INVITATION MODAL --- */
-    .invitation-container {
+    /* --- PROPOSAL MODAL (ÇIKMA TEKLİFİ) --- */
+    .modal-overlay {
       position: fixed;
       top: 0;
       left: 0;
-      width: 100vw;
-      height: 100vh;
+      width: 100%;
+      height: 100%;
+      background: rgba(6, 4, 15, 0.88);
+      backdrop-filter: blur(8px);
       display: flex;
-      justify-content: center;
       align-items: center;
-      z-index: 80;
-      background: radial-gradient(circle at center, rgba(15, 10, 45, 0.95) 0%, rgba(5, 5, 15, 0.98) 100%);
+      justify-content: center;
+      z-index: 100;
       opacity: 0;
-      visibility: hidden;
-      transition: opacity 0.8s ease, visibility 0.8s ease;
-      padding: 20px;
+      pointer-events: none;
+      transition: opacity 0.5s ease;
+      padding: 15px;
     }
 
-    .invitation-container.active {
+    .modal-overlay.active {
       opacity: 1;
-      visibility: visible;
+      pointer-events: auto;
     }
 
-    .invitation-card {
-      background: linear-gradient(135deg, #1d183f 0%, #0d0922 100%);
-      border: 4.5px solid #ffd700;
-      border-radius: 24px;
-      box-shadow: 
-        0 0 35px rgba(108, 99, 255, 0.45),
-        0 20px 40px rgba(0,0,0,0.8),
-        inset 0 0 25px rgba(255,255,255,0.05);
-      padding: 35px 25px;
+    .modal-content {
+      background: linear-gradient(135deg, #1b1333 0%, #0a0717 100%);
+      border: 4.5px solid var(--gold-border);
+      border-radius: 28px;
       width: 100%;
       max-width: 440px;
-      text-align: center;
+      padding: 45px 24px 35px 24px;
+      box-sizing: border-box;
       position: relative;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.7), inset 0 0 15px rgba(255, 215, 0, 0.1);
       transform: scale(0.85);
-      transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.2);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
+      transition: transform 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      text-align: center;
     }
 
-    .invitation-container.active .invitation-card {
+    .modal-overlay.active .modal-content {
       transform: scale(1);
     }
 
-    .beating-heart {
-      font-size: 3.8rem;
-      margin-top: 5px;
+    .modal-ribbon {
+      position: absolute;
+      top: -20px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: linear-gradient(180deg, #ff4081 0%, #c2185b 100%);
+      border: 3.5px solid var(--gold-primary);
+      color: white;
+      font-family: 'Luckiest Guy', sans-serif;
+      font-size: 1.85rem;
+      padding: 6px 36px;
+      border-radius: 30px;
+      box-shadow: 0 5px 12px rgba(0,0,0,0.6);
+      text-shadow: 0 2px 3px rgba(0,0,0,0.4);
+      white-space: nowrap;
+    }
+
+    .modal-heart-box {
+      margin-top: 15px;
       margin-bottom: 15px;
-      animation: heartBeat 1.2s infinite ease-in-out;
-      filter: drop-shadow(0 0 12px #ff4081);
-      display: inline-block;
     }
 
-    @keyframes heartBeat {
-      0% { transform: scale(1); }
-      15% { transform: scale(1.22); }
-      30% { transform: scale(1); }
-      45% { transform: scale(1.16); }
-      60% { transform: scale(1); }
-      100% { transform: scale(1); }
+    .pulsing-heart {
+      animation: modalHeartBeat 1.4s infinite;
+      filter: drop-shadow(0 0 10px #ff3b6c);
     }
 
-    .invitation-title {
-      font-size: 2.1rem;
-      margin: 0 0 15px 0;
+    @keyframes modalHeartBeat {
+      0%, 60%, 100% { transform: scale(1); }
+      15% { transform: scale(1.15); }
+      30% { transform: scale(1.05); }
+      45% { transform: scale(1.2); }
     }
 
-    .invitation-msg {
+    .modal-body {
+      font-family: 'Outfit', sans-serif;
+      color: #ece5ff;
       font-size: 1.15rem;
-      line-height: 1.65;
-      color: #e2e4f5;
-      font-weight: 500;
-      margin: 0 0 25px 0;
-      white-space: pre-line;
-      text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+      line-height: 1.55;
+      margin-bottom: 25px;
     }
 
-    .btn-wrapper {
+    .modal-body p {
+      margin: 8px 0;
+      font-weight: 400;
+    }
+
+    .highlight-ask {
+      font-weight: 800;
+      color: var(--gold-secondary);
+      font-size: 1.35rem;
+      margin-top: 20px !important;
+      text-shadow: 0 0 10px rgba(255, 230, 127, 0.25);
+    }
+
+    .modal-buttons {
       display: flex;
       justify-content: center;
-      align-items: center;
       gap: 25px;
-      width: 100%;
-      min-height: 75px;
+      align-items: center;
+      margin-top: 25px;
+      min-height: 60px;
       position: relative;
     }
 
-    #evet-btn {
-      min-width: 140px;
-      animation: pulseEvet 1.8s infinite alternate;
-    }
-
-    @keyframes pulseEvet {
-      0% { transform: scale(1); box-shadow: 0 6px 0 #3e2600, 0 12px 20px rgba(255, 215, 0, 0.3); }
-      100% { transform: scale(1.06); box-shadow: 0 6px 0 #3e2600, 0 18px 25px rgba(255, 215, 0, 0.6); }
-    }
-
-    #hayir-btn {
-      min-width: 110px;
-      padding: 11px 22px;
-      font-size: 1rem;
-      background: linear-gradient(to bottom, #5a6268 0%, #343a40 100%);
-      border: 3.5px solid #1a1e21;
-      box-shadow: 
-        0 4px 0 #1a1e21,
-        0 6px 12px rgba(0,0,0,0.4);
+    /* Buttons Clash Royale style */
+    .btn-evet {
+      background: linear-gradient(180deg, #ffe082 0%, #ffb300 100%);
+      border: 3px solid #ffffff;
+      box-shadow: 0 5px 0 #9e7000, 0 8px 16px rgba(0,0,0,0.4);
+      color: #3e2723;
+      font-family: 'Luckiest Guy', sans-serif;
+      font-size: 1.3rem;
+      padding: 12px 35px;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: transform 0.1s, filter 0.2s;
+      text-shadow: 0 1px 1px rgba(255,255,255,0.5);
+      outline: none;
       z-index: 10;
-      transition: top 0.2s cubic-bezier(0.25, 0.8, 0.25, 1), left 0.2s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.1s ease;
     }
 
-    #hayir-btn:active {
-      transform: translateY(2px);
-      box-shadow: 0 1px 0 #1a1e21;
+    .btn-evet:hover {
+      filter: brightness(1.15);
+      transform: translateY(-2px);
     }
 
-    /* --- SUCCESS VIEW --- */
-    .success-view {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      justify-content: center;
-      gap: 15px;
-      animation: scaleUp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.2);
+    .btn-evet:active {
+      transform: translateY(3px);
+      box-shadow: 0 2px 0 #9e7000, 0 4px 8px rgba(0,0,0,0.4);
+    }
+
+    .btn-hayir {
+      background: linear-gradient(180deg, #ff8a80 0%, #d50000 100%);
+      border: 3px solid #ffffff;
+      box-shadow: 0 5px 0 #7a0000, 0 8px 16px rgba(0,0,0,0.4);
+      color: white;
+      font-family: 'Luckiest Guy', sans-serif;
+      font-size: 1.15rem;
+      padding: 12px 25px;
+      border-radius: 14px;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.1);
+      text-shadow: 0 1.5px 1px #5a0000;
+      outline: none;
+      z-index: 9;
+      white-space: nowrap;
+    }
+
+
+    /* --- VICTORY SCREEN --- */
+    #victoryScreen {
+      z-index: 150;
+      background: rgba(5, 3, 12, 0.97);
+    }
+
+    .victory-banner-box {
+      background: linear-gradient(180deg, #ffc800 0%, #ff9000 100%);
+      border: 4.5px solid #ffffff;
+      border-radius: 16px;
+      padding: 12px 65px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.7), inset 0 2px 2px rgba(255,255,255,0.3);
+      transform: rotate(-3deg) scale(0.9);
+      animation: victoryIntro 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards, victoryFloat 3s ease-in-out infinite alternate 0.8s;
+      margin-bottom: 30px;
+    }
+
+    @keyframes victoryIntro {
+      0% { transform: rotate(-12deg) scale(0.4); opacity: 0; }
+      100% { transform: rotate(-3deg) scale(1); opacity: 1; }
+    }
+
+    @keyframes victoryFloat {
+      0% { transform: rotate(-3deg) translateY(0px); }
+      100% { transform: rotate(-1deg) translateY(-8px); }
+    }
+
+    .victory-title {
+      font-family: 'Luckiest Guy', sans-serif;
+      font-size: 4.5rem;
+      color: white;
+      text-shadow: 
+        0 4px 0 #7e2d00, 
+        0 -1.5px 0 #7e2d00, 
+        2.5px 2.5px 0 #7e2d00, 
+        -2.5px -2.5px 0 #7e2d00, 
+        4px 8px 15px rgba(0,0,0,0.8);
+      margin: 0;
+      letter-spacing: 2px;
+      text-align: center;
+    }
+
+    .victory-card {
+      background: linear-gradient(135deg, #1d1736 0%, #0b0917 100%);
+      border: 4px solid var(--gold-border);
+      border-radius: 24px;
+      max-width: 440px;
       width: 100%;
-    }
-
-    @keyframes scaleUp {
-      0% { transform: scale(0.6); opacity: 0; }
-      100% { transform: scale(1); opacity: 1; }
-    }
-
-    .crown-badge {
-      font-size: 4.8rem;
-      filter: drop-shadow(0 0 15px #ffd700);
-      animation: floatBadge 3.5s ease-in-out infinite;
-      margin-bottom: 5px;
-    }
-
-    @keyframes floatBadge {
-      0% { transform: translateY(0px) rotate(0deg); }
-      50% { transform: translateY(-10px) rotate(-3deg); }
-      100% { transform: translateY(0px) rotate(0deg); }
-    }
-
-    .success-title {
-      font-size: 2.8rem;
-      margin: 0;
-      text-shadow: 0 4px 10px rgba(0,0,0,0.8);
-    }
-
-    .success-decor {
-      font-size: 1.4rem;
-      color: var(--gold-light);
-      letter-spacing: 6px;
-      margin-bottom: 5px;
-    }
-
-    .success-msg {
-      font-size: 1.25rem;
-      line-height: 1.7;
-      color: #ffffff;
+      padding: 35px 25px;
+      box-sizing: border-box;
       text-align: center;
-      max-width: 380px;
-      font-weight: 600;
+      box-shadow: 0 12px 24px rgba(0,0,0,0.6);
+      transform: translateY(30px);
+      opacity: 0;
+      animation: victoryCardIntro 0.6s ease-out 0.4s forwards;
+    }
+
+    @keyframes victoryCardIntro {
+      0% { transform: translateY(30px); opacity: 0; }
+      100% { transform: translateY(0); opacity: 1; }
+    }
+
+    .crown-glow {
+      animation: crownGlowPulse 2s infinite alternate, modalHeartBeat 2s infinite;
+      filter: drop-shadow(0 0 15px rgba(255,200,0,0.6));
+      margin-bottom: 25px;
+    }
+
+    @keyframes crownGlowPulse {
+      0% { filter: drop-shadow(0 0 10px rgba(255,200,0,0.5)); }
+      100% { filter: drop-shadow(0 0 25px rgba(255,200,0,0.95)); }
+    }
+
+    .victory-msg {
+      font-family: 'Outfit', sans-serif;
+      font-size: 1.35rem;
+      line-height: 1.6;
+      color: #fff;
+      font-weight: 700;
+      margin: 0;
       text-shadow: 0 2px 4px rgba(0,0,0,0.6);
-      margin: 0;
-    }
-
-    .success-celebration-emoji {
-      font-size: 2.3rem;
-      margin-top: 15px;
-      letter-spacing: 10px;
-      text-align: center;
-    }
-
-    /* --- MOBILE RESPONSIVENESS --- */
-    @media (max-width: 768px) {
-      .header-title {
-        font-size: 2.1rem;
-      }
-      .loading-logo {
-        font-size: 2rem;
-      }
-      .cards-deck {
-        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-        gap: 15px;
-        padding: 0 10px;
-      }
-      .card-container {
-        width: 160px;
-        height: 250px;
-      }
-      .front-emoji {
-        font-size: 2.8rem;
-      }
-      .front-label {
-        font-size: 1rem;
-      }
-      .back-emoji-holder {
-        width: 46px;
-        height: 46px;
-        font-size: 1.6rem;
-        margin: 5px 0;
-      }
-      .back-title {
-        font-size: 0.95rem;
-        margin-bottom: 4px;
-      }
-      .back-text {
-        font-size: 0.72rem;
-        line-height: 1.35;
-      }
-      .rarity-banner {
-        font-size: 0.65rem;
-        padding: 2px 8px;
-      }
-      .back-footer {
-        font-size: 0.7rem;
-        margin-top: 5px;
-      }
-      .elixir-badge {
-        width: 26px;
-        height: 26px;
-        font-size: 0.9rem;
-        border-width: 1.5px;
-      }
-      .elixir-bubble {
-        width: 48px;
-        height: 48px;
-      }
-      .elixir-bar-container {
-        padding-left: 40px;
-      }
-      .elixir-progress-track {
-        height: 24px;
-      }
-      .elixir-label {
-        font-size: 0.75rem;
-      }
-      .invitation-card {
-        padding: 30px 20px;
-      }
-      .invitation-title {
-        font-size: 1.8rem;
-      }
-      .invitation-msg {
-        font-size: 1.05rem;
-      }
-      .beating-heart {
-        font-size: 3.2rem;
-      }
     }
   </style>
 </head>
 <body>
 
-  <!-- Fullscreen Particle Effects Canvas -->
-  <canvas id="confetti-canvas"></canvas>
+  <!-- Background Particle System Canvas -->
+  <canvas id="particleCanvas"></canvas>
 
-  <!-- LOADING SCREEN OVERLAY -->
-  <div id="loading-screen" class="screen-overlay">
+  <!-- LOADING SCREEN -->
+  <div id="loadingScreen" class="screen active">
     <div class="loading-container">
-      <div class="loading-logo royal-text gold-text">Maceraya Hazırlık</div>
-      <div class="loading-subtitle">Bensu için özel bir şey...</div>
+      <!-- Purple Elixir Golem Glowing SVG Logo -->
+      <svg class="golem-glow-logo" viewBox="0 0 100 100" id="loadingGolem">
+        <polygon points="50,5 90,30 90,70 50,95 10,70 10,30" fill="url(#gGolemGrad)" stroke="#ff7bfc" stroke-width="3" />
+        <polygon points="50,5 50,45 90,30" fill="#ff9eff" opacity="0.3"/>
+        <polygon points="50,5 50,45 10,30" fill="#7500ad" opacity="0.4"/>
+        <polygon points="10,30 50,45 10,70" fill="#500078" opacity="0.5"/>
+        <polygon points="90,30 50,45 90,70" fill="#ba3aff" opacity="0.2"/>
+        <polygon points="50,45 10,70 50,95" fill="#310047" opacity="0.6"/>
+        <polygon points="50,45 90,70 50,95" fill="#670094" opacity="0.4"/>
+        <polygon points="30,42 45,44 35,49" fill="#00ffff" />
+        <polygon points="70,42 55,44 65,49" fill="#00ffff" />
+        <defs>
+          <linearGradient id="gGolemGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+            <stop offset="0%" stop-color="#ff7bfc" />
+            <stop offset="50%" stop-color="#9d00db" />
+            <stop offset="100%" stop-color="#3c0058" />
+          </linearGradient>
+        </defs>
+      </svg>
       
-      <!-- Floating Closed Chest SVG -->
-      <div class="loading-chest-wrapper">
-        <svg width="110" height="110" viewBox="0 0 120 120" class="svg-chest">
-          <circle cx="60" cy="65" r="42" fill="url(#chestGlow)" class="glow-pulse" />
-          
-          <rect x="25" y="60" width="70" height="40" rx="6" fill="url(#woodGrad)" stroke="#110a06" stroke-width="3" />
-          <path d="M 25 60 C 25 33, 95 33, 95 60 Z" fill="url(#woodGrad)" stroke="#110a06" stroke-width="3" />
-          
-          <rect x="25" y="60" width="10" height="40" fill="url(#metalGrad)" stroke="#110a06" />
-          <rect x="85" y="60" width="10" height="40" fill="url(#metalGrad)" stroke="#110a06" />
-          <path d="M 25 60 C 25 33, 35 33, 35 60 Z" fill="url(#metalGrad)" stroke="#110a06" />
-          <path d="M 85 60 C 85 33, 95 33, 95 60 Z" fill="url(#metalGrad)" stroke="#110a06" />
-          
-          <rect x="52" y="60" width="16" height="40" fill="url(#goldGrad)" stroke="#523902" stroke-width="1.5" />
-          <path d="M 52 60 C 52 33, 68 33, 68 60 Z" fill="url(#goldGrad)" stroke="#523902" stroke-width="1.5" />
-          
-          <polygon points="60,48 70,58 60,68 50,58" fill="url(#crystalGrad)" stroke="#004466" stroke-width="2" class="gem-shine" />
-          <rect x="55" y="58" width="10" height="15" rx="2" fill="url(#goldGrad)" stroke="#523902" stroke-width="1" />
-          <circle cx="60" cy="63" r="2.5" fill="#110a06" />
-          <polygon points="59,64 61,64 62,70 58,70" fill="#110a06" />
-        </svg>
+      <h1 class="game-title">BENSU ARENASI</h1>
+      
+      <!-- Text Status Messages -->
+      <div class="loading-status" id="loadingStatus">İksir şişeleri dolduruluyor...</div>
+      
+      <div class="progress-bar-outer" id="loadingBarOuter">
+        <div class="progress-bar-inner" id="loadingBarInner"></div>
       </div>
       
-      <!-- Loaded Bar -->
-      <div class="loading-bar-wrapper">
-        <div id="loading-bar" class="loading-bar">
-          <div class="loading-shine"></div>
-        </div>
-      </div>
-      <div id="loading-status" class="loading-status">Anılar yükleniyor... 0%</div>
+      <div class="progress-percentage" id="loadingProgressText">0%</div>
       
-      <!-- Play/Start button triggers initialization of Web Audio -->
-      <button id="start-btn" class="royal-btn gold-btn hidden">Başlat ⚔️</button>
+      <button class="btn-enter-arena" id="enterBtn">ARENAYA GİR ⚔️</button>
     </div>
   </div>
 
-  <!-- MAIN ADVENTURE CONTAINER -->
-  <main id="main-content" class="main-container hidden">
-    <header class="game-header">
-      <div class="crown-icon">👑</div>
-      <h1 class="royal-text gold-text header-title">Kraliyet Albümü</h1>
-      <p class="subtitle-desc">9 Aylık Serüvenin Anı Kartları</p>
+  <!-- MAIN ARENA SCREEN -->
+  <div id="arenaScreen" class="screen">
+    <header class="arena-header">
+      <!-- Trophy Box (starts at 4500, counts up +100 on card flips) -->
+      <div class="trophy-box">
+        <!-- Trophy Gold SVG -->
+        <svg viewBox="0 0 100 100" width="28" height="28" class="trophy-icon">
+          <path d="M 25 20 L 75 20 C 75 50, 65 65, 50 65 C 35 65, 25 50, 25 20 Z" fill="url(#tGold)" stroke="#f57f17" stroke-width="2" />
+          <path d="M 25 28 C 15 28, 15 45, 27 45" fill="none" stroke="url(#tGold)" stroke-width="5" stroke-linecap="round" />
+          <path d="M 75 28 C 85 28, 85 45, 73 45" fill="none" stroke="url(#tGold)" stroke-width="5" stroke-linecap="round" />
+          <rect x="42" y="65" width="16" height="15" fill="url(#tGold)" stroke="#f57f17" stroke-width="2" />
+          <ellipse cx="50" cy="82" rx="20" ry="8" fill="#5d4037" stroke="url(#tGold)" stroke-width="2" />
+          <polygon points="50,25 53,32 60,32 55,36 57,43 50,39 43,43 45,36 40,32 47,32" fill="#fff" opacity="0.9" />
+          <defs>
+            <linearGradient id="tGold" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#fff176" />
+              <stop offset="50%" stop-color="#fbc02d" />
+              <stop offset="100%" stop-color="#f57f17" />
+            </linearGradient>
+          </defs>
+        </svg>
+        <span id="trophyCount">4500</span> 🏆
+      </div>
+      
+      <div class="arena-title-group">
+        <h1 class="arena-title">Bensu'nun Arenası 👑</h1>
+        <div class="arena-subtitle">5 Anılık Desten</div>
+      </div>
     </header>
 
-    <!-- Progress Dashboard -->
-    <section class="status-panel">
-      <div class="cards-counter">
-        Toplanan Kartlar: <span id="collected-count" class="gold-text">0</span> / 5
-      </div>
+    <main class="deck-container" id="deckContainer">
       
-      <!-- Custom Purple Elixir Bar -->
-      <div class="elixir-bar-container">
-        <div class="elixir-bubble">
-          <svg viewBox="0 0 100 100" class="elixir-drop-svg">
-            <path d="M50 15 C20 45, 20 85, 50 95 C80 85, 80 45, 50 15 Z" fill="#b82eef" stroke="#ffffff" stroke-width="6"/>
-            <text x="50" y="65" font-family="var(--font-header)" font-weight="900" font-size="34" fill="#ffffff" text-anchor="middle" id="elixir-num">0</text>
-          </svg>
-        </div>
-        <div class="elixir-progress-track">
-          <div id="elixir-fill" class="elixir-fill">
-            <div class="elixir-shine"></div>
+      <!-- Card 1 - Epic (Destansı) -->
+      <div class="card-wrapper">
+        <div class="card epic" id="card-1">
+          <div class="card-face card-front">
+            <div class="front-glow-aura"></div>
+            <div class="question-mark">❓</div>
+            <div class="card-category">İlk Anımız</div>
+            <button class="btn-card-action" onclick="openCard(1, event)">Aç 🔓</button>
           </div>
-        </div>
-        <div class="elixir-label">İKSİR</div>
-      </div>
-    </section>
-
-    <!-- Deck of 5 Memories -->
-    <section id="cards-deck" class="cards-deck">
-      
-      <!-- Card 1 -->
-      <div class="card-container" onclick="flipCard(this, 1)">
-        <div class="card rarity-epic">
-          <div class="elixir-badge">2</div>
-          <div class="card-decor">👑</div>
-          <div class="card-front">
-            <div class="front-main">
-              <div class="front-emoji">❓</div>
-              <div class="front-label">İlk Anımız</div>
+          <div class="card-face card-back">
+            <div class="rarity-banner">DESTANSI</div>
+            <div class="card-body">
+              <div class="emoji-wrapper">🍊</div>
+              <div class="card-title">Mandalina & Kalem</div>
+              <p class="card-text">
+                Bir mandalina ikram etmiştim, sen de bana o meşhur kalemi teklif etmiştin. "Süper kalmış, garanti veremem her an bozulabilir" demiştin. O gün anladım seninle eğlenebileceğimi.
+              </p>
             </div>
-            <button class="front-reveal-btn">Aç 🔓</button>
-          </div>
-          <div class="card-back">
-            <div class="rarity-banner">Destansı</div>
-            <div class="back-emoji-holder">📝</div>
-            <div class="back-title">Kalem & Mandalina</div>
-            <div class="back-text">
-              Bir kalem istemiştim, mandalina teklif etmiştin. "Süper kalmiş, garanti veremem her an bozulabilir" demiştin. O gün anladım seninle eğlenebileceğimi.
-            </div>
-            <div class="back-footer">Koleksiyonda</div>
+            <div class="card-footer">KOLEKSİYONDA ✓</div>
           </div>
         </div>
       </div>
 
-      <!-- Card 2 -->
-      <div class="card-container" onclick="flipCard(this, 2)">
-        <div class="card rarity-rare">
-          <div class="elixir-badge">2</div>
-          <div class="card-decor">👑</div>
-          <div class="card-front">
-            <div class="front-main">
-              <div class="front-emoji">🥜</div>
-              <div class="front-label">Sözümü Tuttum</div>
-            </div>
-            <button class="front-reveal-btn">Aç 🔓</button>
+      <!-- Card 2 - Rare (Ender) -->
+      <div class="card-wrapper">
+        <div class="card rare" id="card-2">
+          <div class="card-face card-front">
+            <div class="front-glow-aura"></div>
+            <div class="question-mark">❓</div>
+            <div class="card-category">Sözümü Tuttum</div>
+            <button class="btn-card-action" onclick="openCard(2, event)">Aç 🔓</button>
           </div>
-          <div class="card-back">
-            <div class="rarity-banner">Ender</div>
-            <div class="back-emoji-holder">🥜</div>
-            <div class="back-title">Yer Fıstığı</div>
-            <div class="back-text">
-              Osmaniye'den fıstık getirmiştim, söz vermiştim çünkü. "Oha nasıl hatırlıyorsun" demiştin. Her şeyi hatırlıyorum Bensu.
+          <div class="card-face card-back">
+            <div class="rarity-banner">ENDER</div>
+            <div class="card-body">
+              <div class="emoji-wrapper">🥜</div>
+              <div class="card-title">Yer Fıstığı</div>
+              <p class="card-text">
+                Osmaniye'den fıstık getirmiştim, söz vermiştim çünkü. "Oha nasıl hatırlıyorsun" demiştin. Her şeyi hatırlıyorum Bensu.
+              </p>
             </div>
-            <div class="back-footer">Koleksiyonda</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 3 -->
-      <div class="card-container" onclick="flipCard(this, 3)">
-        <div class="card rarity-common">
-          <div class="elixir-badge">2</div>
-          <div class="card-decor">👑</div>
-          <div class="card-front">
-            <div class="front-main">
-              <div class="front-emoji">📱</div>
-              <div class="front-label">Hiç Beklemiyordun</div>
-            </div>
-            <button class="front-reveal-btn">Aç 🔓</button>
-          </div>
-          <div class="card-back">
-            <div class="rarity-banner">Sıradan</div>
-            <div class="back-emoji-holder">📱</div>
-            <div class="back-title">Telefon Süsü</div>
-            <div class="back-text">
-              Kardeşime telefon süsü alacaktım, sen bulup getirmiştin bile. Kimse arkadaşına böyle bir şey yapmaz. Bu kadar tatlı olmak zorunda mısın?
-            </div>
-            <div class="back-footer">Koleksiyonda</div>
+            <div class="card-footer">KOLEKSİYONDA ✓</div>
           </div>
         </div>
       </div>
 
-      <!-- Card 4 -->
-      <div class="card-container" onclick="flipCard(this, 4)">
-        <div class="card rarity-legendary">
-          <div class="elixir-badge">2</div>
-          <div class="card-decor">👑</div>
-          <div class="card-front">
-            <div class="front-main">
-              <div class="front-emoji">🎮</div>
-              <div class="front-label">Gece 2'ye Kadar</div>
-            </div>
-            <button class="front-reveal-btn">Aç 🔓</button>
+      <!-- Card 3 - Common (Sıradan) -->
+      <div class="card-wrapper">
+        <div class="card common" id="card-3">
+          <div class="card-face card-front">
+            <div class="front-glow-aura"></div>
+            <div class="question-mark">❓</div>
+            <div class="card-category">Hiç Beklemiyordun</div>
+            <button class="btn-card-action" onclick="openCard(3, event)">Aç 🔓</button>
           </div>
-          <div class="card-back">
-            <div class="rarity-banner">Efsanevi</div>
-            <div class="back-emoji-holder">🎮</div>
-            <div class="back-title">Clash Royale</div>
-            <div class="back-text">
-              Sınavdan bir gece önce 2'ye kadar yazışmıştık. Ve sen bana Clash'ten ekran görüntüsü atıp "duo lazımsa haber et" demiştin. Oyun bahaneydi, seni görmek istemiştin.
+          <div class="card-face card-back">
+            <div class="rarity-banner">SIRADAN</div>
+            <div class="card-body">
+              <div class="emoji-wrapper">📱</div>
+              <div class="card-title">Telefon Süsü</div>
+              <p class="card-text">
+                Kardeşime telefon süsü alacaktım, sen bulup getirmiştin bile. Kimse arkadaşına böyle bir şey yapmaz. Bu kadar tatlı olmak zorunda mısın?
+              </p>
             </div>
-            <div class="back-footer">Koleksiyonda</div>
-          </div>
-        </div>
-      </div>
-
-      <!-- Card 5 -->
-      <div class="card-container" onclick="flipCard(this, 5)">
-        <div class="card rarity-champion">
-          <div class="elixir-badge">2</div>
-          <div class="card-decor">👑</div>
-          <div class="card-front">
-            <div class="front-main">
-              <div class="front-emoji">🍜</div>
-              <div class="front-label">Son Buluşma</div>
-            </div>
-            <button class="front-reveal-btn">Aç 🔓</button>
-          </div>
-          <div class="card-back">
-            <div class="rarity-banner">Şampiyon</div>
-            <div class="back-emoji-holder">🍜</div>
-            <div class="back-title">İlk Yemek</div>
-            <div class="back-text">
-              Finalden sonra ilk kez birlikte yemek yemiştik. "Kore'den bana bir şey getirmedin mi" diye sormuştun. Maskeni hâlâ vermedim... belki yüz yüze veririm?
-            </div>
-            <div class="back-footer">Koleksiyonda</div>
+            <div class="card-footer">KOLEKSİYONDA ✓</div>
           </div>
         </div>
       </div>
 
-    </section>
+      <!-- Card 4 - Legendary (Efsanevi) -->
+      <div class="card-wrapper">
+        <div class="card legendary" id="card-4">
+          <div class="card-face card-front">
+            <div class="front-glow-aura"></div>
+            <div class="question-mark">❓</div>
+            <div class="card-category">Gece 2'ye Kadar</div>
+            <button class="btn-card-action" onclick="openCard(4, event)">Aç 🔓</button>
+          </div>
+          <div class="card-face card-back shimmer-effect">
+            <div class="rarity-banner">EFSANEVİ</div>
+            <div class="card-body">
+              <div class="emoji-wrapper">💜</div>
+              <div class="card-title">Clash & İksir Golemi</div>
+              <p class="card-text">
+                Sınavdan bir gece önce 2'ye kadar yazışmıştık. Bana Clash'ten ekran görüntüsü atıp "duo lazımsa haber et" demiştin. En sevdiğim karakter mor iksir golemi, en sevdiğim oyunu seninle oynamak gibi bir şey bu.
+              </p>
+            </div>
+            <div class="card-footer">KOLEKSİYONDA ✓</div>
+          </div>
+        </div>
+      </div>
 
-    <!-- Chest Unlock Section (Visible when 5/5 cards flipped) -->
-    <section id="chest-trigger-section" class="chest-trigger-section hidden">
-      <div class="achievement-banner royal-text">✨ Koleksiyon Tamamlandı! ✨</div>
-      <p class="chest-hint">Ödülünü açmak için Efsanevi Sandığa dokun!</p>
-      
-      <div id="legendary-chest" class="legendary-chest">
-        <svg width="200" height="200" viewBox="0 0 120 120" class="legendary-chest-svg">
-          <circle cx="60" cy="65" r="48" fill="url(#chestGlowLegendary)" class="legendary-aurapulse" />
+      <!-- Card 5 - Champion (Şampiyon) -->
+      <div class="card-wrapper">
+        <div class="card champion" id="card-5">
+          <div class="card-face card-front">
+            <div class="front-glow-aura"></div>
+            <!-- Champion Crown Icon decoration on card face -->
+            <svg viewBox="0 0 100 100" width="30" height="30" style="position:absolute; top:8px; left:8px; opacity:0.6;">
+              <path d="M 15 75 L 85 75 L 90 40 L 70 55 L 50 25 L 30 55 L 10 40 Z" fill="#ffd700" stroke="#b78103" stroke-width="2"/>
+            </svg>
+            <div class="question-mark">❓</div>
+            <div class="card-category">Son Buluşma</div>
+            <button class="btn-card-action" onclick="openCard(5, event)">Aç 🔓</button>
+          </div>
+          <div class="card-face card-back shimmer-effect">
+            <div class="rarity-banner">ŞAMPİYON</div>
+            <div class="card-body">
+              <div class="emoji-wrapper">🍜</div>
+              <div class="card-title">İlk Yemek</div>
+              <p class="card-text">
+                Finalden sonra ilk kez birlikte yemek yemiştik. "Kore'den bana bir şey getirmedin mi" diye sormuş, ben de maskemi takmıştım. Maskeni hâlâ vermedim... belki yüz yüze veririm?
+              </p>
+            </div>
+            <div class="card-footer">KOLEKSİYONDA ✓</div>
+          </div>
+        </div>
+      </div>
 
-          <rect x="25" y="62" width="70" height="38" rx="8" fill="url(#legendaryBlue)" stroke="#0b0f1d" stroke-width="3.5" />
-          <path d="M 25 62 C 25 32, 95 32, 95 62 Z" fill="url(#legendaryBlue)" stroke="#0b0f1d" stroke-width="3.5" />
+    </main>
+
+    <!-- LEGENDARY CHEST REVEAL (HIDDEN AT START) -->
+    <section id="chestSection">
+      <h2 class="chest-title">✨ Koleksiyon Tamamlandı! ✨</h2>
+      <div class="chest-wrapper" id="chestWrapper" onclick="unlockChest(event)">
+        <!-- Beautiful SVG Legendary Chest -->
+        <svg viewBox="0 0 200 200" width="180" height="180">
+          <circle cx="100" cy="105" r="70" fill="url(#gemGlow)" opacity="0.65" filter="url(#cSoftGlow)"/>
           
-          <path d="M 25 62 L 35 62 L 35 100 L 29 100 C 27 100, 25 98, 25 96 Z" fill="url(#goldHeavy)" stroke="#3e2e00" stroke-width="1.5" />
-          <path d="M 95 62 L 85 62 L 85 100 L 91 100 C 93 100, 95 98, 95 96 Z" fill="url(#goldHeavy)" stroke="#3e2e00" stroke-width="1.5" />
+          <!-- Chest base -->
+          <rect x="40" y="90" width="120" height="70" rx="10" fill="url(#chBlue)" stroke="url(#chGold)" stroke-width="5" />
+          <path d="M 40 90 L 65 90 L 40 115 Z" fill="url(#chGold)" />
+          <path d="M 160 90 L 135 90 L 160 115 Z" fill="url(#chGold)" />
+          <path d="M 40 160 L 65 160 L 40 135 Z" fill="url(#chGold)" />
+          <path d="M 160 160 L 135 160 L 160 135 Z" fill="url(#chGold)" />
+          <rect x="74" y="90" width="14" height="70" fill="url(#chGold)" opacity="0.8"/>
+          <rect x="112" y="90" width="14" height="70" fill="url(#chGold)" opacity="0.8"/>
+
+          <!-- Chest Lid -->
+          <path d="M 35 90 C 35 45, 165 45, 165 90 Z" fill="url(#chPurple)" stroke="url(#chGold)" stroke-width="5" />
+          <path d="M 35 90 C 35 60, 65 60, 65 90 Z" fill="url(#chGold)" />
+          <path d="M 165 90 C 165 60, 135 60, 135 90 Z" fill="url(#chGold)" />
           
-          <path d="M 25 62 C 25 32, 35 32, 35 62 Z" fill="url(#goldHeavy)" stroke="#3e2e00" stroke-width="1.5" />
-          <path d="M 95 62 C 95 32, 85 32, 85 62 Z" fill="url(#goldHeavy)" stroke="#3e2e00" stroke-width="1.5" />
+          <!-- Lock block and glowing cyan crystal gem -->
+          <rect x="78" y="80" width="44" height="32" rx="5" fill="#0c071a" stroke="url(#chGold)" stroke-width="3"/>
+          <polygon points="100,83 113,96 100,109 87,96" fill="#00f0ff" stroke="#fff" stroke-width="2" filter="url(#cSoftGlow)"/>
           
-          <rect x="52" y="62" width="16" height="38" fill="url(#goldHeavy)" stroke="#3e2e00" stroke-width="1.5" />
-          <path d="M 52 62 C 52 32, 68 32, 68 62 Z" fill="url(#goldHeavy)" stroke="#3e2e00" stroke-width="1.5" />
-          
-          <polygon points="60,32 70,44 60,56 50,44" fill="url(#rainbowGrad)" stroke="#ffffff" stroke-width="1.5" />
-          
-          <rect x="50" y="58" width="20" height="22" rx="4" fill="url(#goldHeavy)" stroke="#3e2e00" stroke-width="2" />
-          <polygon points="60,60 67,65 67,73 60,78 53,73 53,65" fill="url(#cyanNeon)" stroke="#004466" stroke-width="1.5" class="legendary-crystal-pulse" />
-          <circle cx="60" cy="69" r="2.5" fill="#0b0f1d" />
-          <polygon points="59,70 61,70 62,75 58,75" fill="#0b0f1d" />
+          <defs>
+            <linearGradient id="chGold" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" stop-color="#ffe652" />
+              <stop offset="50%" stop-color="#ffd700" />
+              <stop offset="100%" stop-color="#b8860b" />
+            </linearGradient>
+            <linearGradient id="chBlue" x1="0%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" stop-color="#2a3d8c" />
+              <stop offset="100%" stop-color="#12183a" />
+            </linearGradient>
+            <linearGradient id="chPurple" x1="0%" y1="0%" x2="100%" y2="0%">
+              <stop offset="0%" stop-color="#8a2be2" />
+              <stop offset="100%" stop-color="#4a0082" />
+            </linearGradient>
+            <radialGradient id="gemGlow" cx="50%" cy="50%" r="50%">
+              <stop offset="0%" stop-color="#ffffff" />
+              <stop offset="40%" stop-color="#00f0ff" />
+              <stop offset="100%" stop-color="#004488" stop-opacity="0" />
+            </radialGradient>
+            <filter id="cSoftGlow" x="-20%" y="-20%" width="140%" height="140%">
+              <feGaussianBlur stdDeviation="6" result="blur" />
+              <feComposite in="SourceGraphic" in2="blur" operator="over" />
+            </filter>
+          </defs>
         </svg>
       </div>
+      <p class="chest-instructions">Ödülünü açmak için Efsanevi Sandığa dokun!</p>
     </section>
-  </main>
 
-  <!-- INVITATION MODAL OVERLAY -->
-  <div id="invitation-modal" class="invitation-container hidden">
-    <div class="invitation-card">
-      <div id="invitation-content">
-        <div class="beating-heart">💖</div>
-        <h2 class="invitation-title royal-text gold-text">Bensu,</h2>
-        <p class="invitation-msg">9 aydır seni tanıyorum.
-Her geçen gün daha çok...
-
-Beraber gülmek, oyun oynamak, çay içmek istiyorum.
-
-Bu yaz bir gün... benimle çıkar mısın?</p>
-        
-        <div class="btn-wrapper">
-          <button id="evet-btn" class="royal-btn gold-btn">Evet 🎉</button>
-          <button id="hayir-btn" class="royal-btn">Hayır 😅</button>
+    <!-- FIXED BOTTOM BAR -->
+    <footer class="bottom-bar" id="arenaBottomBar">
+      <div class="bottom-bar-content">
+        <div class="card-counter-label" id="cardCounterLabel">KART: 0/5</div>
+        <div class="elixir-bar-container">
+          <!-- Golem Avatar Box (Left of elixir bar) -->
+          <div class="golem-avatar-box">
+            <svg viewBox="0 0 100 100">
+              <polygon points="50,10 85,32 85,68 50,90 15,68 15,32" fill="url(#botGolemGrad)" stroke="#ff7bfc" stroke-width="2.5" />
+              <polygon points="50,10 50,48 85,32" fill="#ffbaff" opacity="0.3"/>
+              <polygon points="50,10 50,48 15,32" fill="#6f00a3" opacity="0.4"/>
+              <polygon points="15,32 50,48 15,68" fill="#4a0070" opacity="0.5"/>
+              <polygon points="85,32 50,48 85,68" fill="#ae2eff" opacity="0.2"/>
+              <polygon points="50,48 15,68 50,90" fill="#2d0042" opacity="0.6"/>
+              <polygon points="50,48 85,68 50,90" fill="#5c0085" opacity="0.4"/>
+              <polygon points="32,44 44,46 36,50" fill="#00ffff" />
+              <polygon points="68,44 56,46 64,50" fill="#00ffff" />
+              <defs>
+                <linearGradient id="botGolemGrad" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%" stop-color="#ff7bfc" />
+                  <stop offset="50%" stop-color="#9d00db" />
+                  <stop offset="100%" stop-color="#3c0058" />
+                </linearGradient>
+              </defs>
+            </svg>
+            <!-- Elixir Count Overlay on Golem Head -->
+            <div class="elixir-badge" id="elixirBadgeText">0</div>
+          </div>
+          
+          <!-- Elixir Progress Bar -->
+          <div class="elixir-bar-wrapper">
+            <div class="elixir-bar-fill" id="elixirBarFill">
+              <div class="elixir-bar-grid">
+                <span></span><span></span><span></span><span></span><span></span>
+                <span></span><span></span><span></span><span></span><span></span>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
+    </footer>
+  </div>
+
+  <!-- PROPOSAL MODAL (ÇIKMA TEKLİFİ) -->
+  <div id="proposalModal" class="modal-overlay">
+    <div class="modal-content">
+      <!-- Ribbon style header banner -->
+      <div class="modal-ribbon">Bensu,</div>
       
-      <!-- Inside Scroll Success View -->
-      <div id="success-view" class="success-view hidden">
-        <div class="crown-badge">👑</div>
-        <h3 class="royal-text gold-text success-title">ZAFER!</h3>
-        <div class="success-decor">👑 💛 👑</div>
-        <p class="success-msg">
-          Harika! 🎉 Seni çok sevindireceğim bir yer planlıyorum. Çok yakında mesaj atıyorum! 💛
-        </p>
-        <div class="success-celebration-emoji">🥰 🎮 🍜 🍿</div>
+      <!-- Pulsing pink/red heart -->
+      <div class="modal-heart-box">
+        <svg viewBox="0 0 100 100" class="pulsing-heart" width="55" height="55">
+          <path d="M 50 20 C 35 -5, 0 0, 0 40 C 0 70, 30 85, 50 95 C 70 85, 100 70, 100 40 C 100 0, 65 -5, 50 20 Z" fill="#ff3060"/>
+        </svg>
+      </div>
+      
+      <div class="modal-body">
+        <p>9 aydır seni tanıyorum. Her geçen gün daha çok...</p>
+        <p>Beraber gülmek, oyun oynamak, çay içmek istiyorum.</p>
+        <p class="highlight-ask">Bu yaz bir gün... benimle çıkar mısın?</p>
+      </div>
+      
+      <!-- Action Buttons -->
+      <div class="modal-buttons">
+        <button class="btn-evet" onclick="acceptProposal(event)">Evet 🎉</button>
+        <button class="btn-hayir" id="noBtn">Hayır 😅</button>
       </div>
     </div>
   </div>
 
-  <!-- Reusable SVG definitions for gradients -->
-  <svg width="0" height="0" style="position: absolute;">
-    <defs>
-      <radialGradient id="chestGlow" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stop-color="#6c63ff" stop-opacity="0.8" />
-        <stop offset="100%" stop-color="#6c63ff" stop-opacity="0" />
-      </radialGradient>
-      <linearGradient id="goldGrad" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#ffe652" />
-        <stop offset="50%" stop-color="#ffd700" />
-        <stop offset="100%" stop-color="#c69320" />
-      </linearGradient>
-      <linearGradient id="woodGrad" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#3d2c1f" />
-        <stop offset="100%" stop-color="#211710" />
-      </linearGradient>
-      <linearGradient id="metalGrad" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stop-color="#8a95a5" />
-        <stop offset="50%" stop-color="#4a525d" />
-        <stop offset="100%" stop-color="#23282f" />
-      </linearGradient>
-      <linearGradient id="crystalGrad" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#00ffff" />
-        <stop offset="100%" stop-color="#0088cc" />
-      </linearGradient>
+  <!-- VICTORY SCREEN -->
+  <div id="victoryScreen" class="screen">
+    <div class="victory-banner-box">
+      <h1 class="victory-title">ZAFER!</h1>
+    </div>
+    
+    <div class="victory-card">
+      <!-- Golden Crown glowing icon -->
+      <svg viewBox="0 0 100 100" width="75" height="75" class="crown-glow">
+        <path d="M 15 75 L 85 75 L 90 40 L 70 55 L 50 25 L 30 55 L 10 40 Z" fill="url(#vCrownGold)" stroke="#b78103" stroke-width="3" stroke-linejoin="round" />
+        <rect x="20" y="75" width="60" height="8" rx="3" fill="#d32f2f" />
+        <circle cx="50" cy="25" r="4.5" fill="#00e5ff" />
+        <circle cx="10" cy="40" r="4.5" fill="#d500f9" />
+        <circle cx="90" cy="40" r="4.5" fill="#d500f9" />
+        <circle cx="30" cy="55" r="3.5" fill="#ffea00" />
+        <circle cx="70" cy="55" r="3.5" fill="#ffea00" />
+        <defs>
+          <linearGradient id="vCrownGold" x1="0%" y1="0%" x2="0%" y2="100%">
+            <stop offset="0%" stop-color="#ffe082" />
+            <stop offset="100%" stop-color="#ffb300" />
+          </linearGradient>
+        </defs>
+      </svg>
+      
+      <p class="victory-msg">
+        Harika! 🎉 Seni çok sevindireceğim bir yer planlıyorum. Çok yakında mesaj atıyorum! 💛
+      </p>
+    </div>
+  </div>
 
-      <!-- Legendary Chest definitions -->
-      <linearGradient id="goldHeavy" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stop-color="#fff6b3" />
-        <stop offset="30%" stop-color="#ffd700" />
-        <stop offset="70%" stop-color="#cc9b00" />
-        <stop offset="100%" stop-color="#664d00" />
-      </linearGradient>
-      <linearGradient id="legendaryBlue" x1="0" y1="0" x2="0" y2="1">
-        <stop offset="0%" stop-color="#3b5998" />
-        <stop offset="50%" stop-color="#1e2d5a" />
-        <stop offset="100%" stop-color="#0f1731" />
-      </linearGradient>
-      <linearGradient id="cyanNeon" x1="0" y1="0" x2="1" y2="0">
-        <stop offset="0%" stop-color="#00ffff" />
-        <stop offset="50%" stop-color="#7cffff" />
-        <stop offset="100%" stop-color="#00cccc" />
-      </linearGradient>
-      <radialGradient id="chestGlowLegendary" cx="50%" cy="50%" r="50%">
-        <stop offset="0%" stop-color="#00ffcc" stop-opacity="0.8" />
-        <stop offset="40%" stop-color="#6c63ff" stop-opacity="0.45" />
-        <stop offset="100%" stop-color="#6c63ff" stop-opacity="0" />
-      </radialGradient>
-      <linearGradient id="rainbowGrad" x1="0" y1="0" x2="1" y2="1">
-        <stop offset="0%" stop-color="#00ffcc" />
-        <stop offset="25%" stop-color="#00e5ff" />
-        <stop offset="50%" stop-color="#6c63ff" />
-        <stop offset="75%" stop-color="#ff4081" />
-        <stop offset="100%" stop-color="#ffd700" />
-      </linearGradient>
-    </defs>
-  </svg>
 
+  <!-- SCRIPTS -->
   <script>
-    // --- 8-BIT AUDIO SYNTHESIZER ---
+    // --- 8-BIT AUDIO SYNTH ENGINE (Web Audio API) ---
     let audioCtx = null;
 
     function initAudio() {
       if (!audioCtx) {
         audioCtx = new (window.AudioContext || window.webkitAudioContext)();
       }
-      if (audioCtx && audioCtx.state === 'suspended') {
+      if (audioCtx.state === 'suspended') {
         audioCtx.resume();
       }
     }
 
     function playTick() {
-      initAudio();
-      if (!audioCtx) return;
-      const osc = audioCtx.createOscillator();
-      const gain = audioCtx.createGain();
-      osc.connect(gain);
-      gain.connect(audioCtx.destination);
-      osc.frequency.setValueAtTime(750, audioCtx.currentTime);
-      osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.04);
-      gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
-      gain.gain.exponentialRampToValueAtTime(0.005, audioCtx.currentTime + 0.04);
-      osc.start();
-      osc.stop(audioCtx.currentTime + 0.05);
-    }
-
-    function playFlip() {
-      initAudio();
-      if (!audioCtx) return;
-      const now = audioCtx.currentTime;
-      const notes = [261.63, 329.63, 392.00, 523.25]; // C4, E4, G4, C5 arpeggio
-      notes.forEach((freq, idx) => {
-        const osc = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        osc.type = 'triangle';
-        osc.connect(gain);
-        gain.connect(audioCtx.destination);
-        
-        const startTime = now + idx * 0.07;
-        osc.frequency.setValueAtTime(freq, startTime);
-        osc.frequency.exponentialRampToValueAtTime(freq * 1.3, startTime + 0.12);
-        
-        gain.gain.setValueAtTime(0, now);
-        gain.gain.linearRampToValueAtTime(0.06, startTime);
-        gain.gain.exponentialRampToValueAtTime(0.005, startTime + 0.16);
-        
-        osc.start(startTime);
-        osc.stop(startTime + 0.2);
-      });
-    }
-
-    function playComplete() {
-      initAudio();
-      if (!audioCtx) return;
-      const now = audioCtx.currentTime;
-      const melody = [
-        { freq: 261.63, time: 0 },
-        { freq: 329.63, time: 0.08 },
-        { freq: 392.00, time: 0.16 },
-        { freq: 523.25, time: 0.24 },
-        { freq: 659.25, time: 0.32 },
-        { freq: 783.99, time: 0.4 },
-        { freq: 1046.50, time: 0.48 }
-      ];
-      melody.forEach(note => {
+      try {
+        initAudio();
         const osc = audioCtx.createOscillator();
         const gain = audioCtx.createGain();
         osc.type = 'sine';
+        osc.frequency.setValueAtTime(750, audioCtx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.05);
+        gain.gain.setValueAtTime(0.08, audioCtx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, audioCtx.currentTime + 0.05);
         osc.connect(gain);
         gain.connect(audioCtx.destination);
-        
-        const startTime = now + note.time;
-        osc.frequency.setValueAtTime(note.freq, startTime);
-        gain.gain.setValueAtTime(0, now);
-        gain.gain.linearRampToValueAtTime(0.05, startTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.24);
-        
-        osc.start(startTime);
-        osc.stop(startTime + 0.3);
-      });
+        osc.start();
+        osc.stop(audioCtx.currentTime + 0.05);
+      } catch(e) {
+        console.error("Audio error:", e);
+      }
+    }
+
+    function playFlip() {
+      try {
+        initAudio();
+        const notes = [261.63, 329.63, 392.00, 523.25]; // C4-E4-G4-C5 Arpeggio
+        const now = audioCtx.currentTime;
+        notes.forEach((freq, idx) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now + idx * 0.07);
+          gain.gain.setValueAtTime(0, now + idx * 0.07);
+          gain.gain.linearRampToValueAtTime(0.12, now + idx * 0.07 + 0.01);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + idx * 0.07 + 0.15);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now + idx * 0.07);
+          osc.stop(now + idx * 0.07 + 0.16);
+        });
+      } catch(e) {
+        console.error("Audio error:", e);
+      }
+    }
+
+    function playComplete() {
+      try {
+        initAudio();
+        const now = audioCtx.currentTime;
+        const playSynthNote = (freq, start, duration, volume = 0.08) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(freq, now + start);
+          gain.gain.setValueAtTime(0, now + start);
+          gain.gain.linearRampToValueAtTime(volume, now + start + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + start + duration);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now + start);
+          osc.stop(now + start + duration);
+        };
+        playSynthNote(392.00, 0, 0.12);      // G4
+        playSynthNote(523.25, 0.12, 0.12);   // C5
+        playSynthNote(659.25, 0.24, 0.12);   // E5
+        playSynthNote(783.99, 0.36, 0.5, 0.1); // G5 Chord
+        playSynthNote(659.25, 0.36, 0.5, 0.06);
+        playSynthNote(523.25, 0.36, 0.5, 0.06);
+      } catch(e) {
+        console.error("Audio error:", e);
+      }
     }
 
     function playYes() {
-      initAudio();
-      if (!audioCtx) return;
-      const now = audioCtx.currentTime;
-      const chords = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99, 1046.50];
-      chords.forEach((freq, idx) => {
-        const osc1 = audioCtx.createOscillator();
-        const osc2 = audioCtx.createOscillator();
-        const gain = audioCtx.createGain();
-        
-        osc1.type = 'sawtooth';
-        osc2.type = 'sine';
-        
-        osc1.connect(gain);
-        osc2.connect(gain);
-        gain.connect(audioCtx.destination);
-        
-        const startTime = now + idx * 0.04;
-        osc1.frequency.setValueAtTime(freq, startTime);
-        osc2.frequency.setValueAtTime(freq * 2, startTime);
-        
-        gain.gain.setValueAtTime(0, now);
-        gain.gain.linearRampToValueAtTime(0.04, startTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.55);
-        
-        osc1.start(startTime);
-        osc2.start(startTime);
-        osc1.stop(startTime + 0.6);
-        osc2.stop(startTime + 0.6);
-      });
-    }
-
-    // --- CANVAS PARTICLE SYSTEM ---
-    class ParticleSystem {
-      constructor(canvas) {
-        this.canvas = canvas;
-        this.ctx = canvas.getContext('2d');
-        this.particles = [];
-        this.active = false;
-        this.resize();
-        window.addEventListener('resize', () => this.resize());
-      }
-
-      resize() {
-        this.canvas.width = window.innerWidth;
-        this.canvas.height = window.innerHeight;
-      }
-
-      start() {
-        this.active = true;
-        this.loop();
-      }
-
-      stop() {
-        this.active = false;
-      }
-
-      clear() {
-        this.particles = [];
-      }
-
-      addConfetti(count = 100) {
-        const colors = ['#ffd700', '#6c63ff', '#00d4aa', '#ff4081', '#00e5ff', '#ffeb3b'];
-        for (let i = 0; i < count; i++) {
-          this.particles.push({
-            type: 'confetti',
-            x: Math.random() * this.canvas.width,
-            y: -20 - Math.random() * 50,
-            vx: -2.5 + Math.random() * 5,
-            vy: 3.5 + Math.random() * 5.5,
-            w: 8 + Math.random() * 8,
-            h: 4.5 + Math.random() * 6,
-            color: colors[Math.floor(Math.random() * colors.length)],
-            rotation: Math.random() * 360,
-            rotationSpeed: -6 + Math.random() * 12
-          });
-        }
-      }
-
-      addHearts(count = 30) {
-        for (let i = 0; i < count; i++) {
-          this.particles.push({
-            type: 'heart',
-            x: Math.random() * this.canvas.width,
-            y: this.canvas.height + 25 + Math.random() * 50,
-            vx: -1.25 + Math.random() * 2.5,
-            vy: -2 - Math.random() * 3.5,
-            size: 14 + Math.random() * 18,
-            color: `hsl(${340 + Math.random() * 25}, 100%, ${60 + Math.random() * 20}%)`,
-            opacity: 0.65 + Math.random() * 0.35
-          });
-        }
-      }
-
-      addExplosion(x, y, count = 50) {
-        const colors = ['#ffd700', '#ffe652', '#ff9f1c', '#ffffff', '#00ffcc'];
-        for (let i = 0; i < count; i++) {
-          const angle = Math.random() * Math.PI * 2;
-          const speed = 1.5 + Math.random() * 5.5;
-          this.particles.push({
-            type: 'star',
-            x: x,
-            y: y,
-            vx: Math.cos(angle) * speed,
-            vy: Math.sin(angle) * speed,
-            size: 3.5 + Math.random() * 7,
-            color: colors[Math.floor(Math.random() * colors.length)],
-            life: 1.0,
-            decay: 0.018 + Math.random() * 0.022
-          });
-        }
-      }
-
-      loop() {
-        if (!this.active) return;
-        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
-
-        for (let i = this.particles.length - 1; i >= 0; i--) {
-          const p = this.particles[i];
-
-          // Confetti particles
-          if (p.type === 'confetti') {
-            p.x += p.vx;
-            p.y += p.vy;
-            p.rotation += p.rotationSpeed;
-            if (p.y > this.canvas.height + 20) {
-              this.particles.splice(i, 1);
-              continue;
-            }
-
-            this.ctx.save();
-            this.ctx.translate(p.x, p.y);
-            this.ctx.rotate((p.rotation * Math.PI) / 180);
-            this.ctx.fillStyle = p.color;
-            this.ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
-            this.ctx.restore();
-          } 
-          // Heart particles
-          else if (p.type === 'heart') {
-            p.x += p.vx;
-            p.y += p.vy;
-            if (p.y < -25) {
-              this.particles.splice(i, 1);
-              continue;
-            }
-
-            this.ctx.save();
-            this.ctx.globalAlpha = p.opacity;
-            this.ctx.fillStyle = p.color;
-            
-            // Draw heart shape
-            this.ctx.beginPath();
-            const topCurveHeight = p.size * 0.3;
-            this.ctx.moveTo(p.x, p.y + topCurveHeight);
-            this.ctx.bezierCurveTo(
-              p.x - p.size / 2, p.y - topCurveHeight, 
-              p.x - p.size, p.y + topCurveHeight, 
-              p.x, p.y + p.size
-            );
-            this.ctx.bezierCurveTo(
-              p.x + p.size, p.y + topCurveHeight, 
-              p.x + p.size / 2, p.y - topCurveHeight, 
-              p.x, p.y + topCurveHeight
-            );
-            this.ctx.fill();
-            this.ctx.restore();
-          }
-          // Star explosion particles
-          else if (p.type === 'star') {
-            p.x += p.vx;
-            p.y += p.vy;
-            p.vy += 0.055; // gravity
-            p.life -= p.decay;
-            if (p.life <= 0) {
-              this.particles.splice(i, 1);
-              continue;
-            }
-
-            this.ctx.save();
-            this.ctx.globalAlpha = p.life;
-            this.ctx.fillStyle = p.color;
-            
-            // Draw 5-pointed star
-            this.ctx.beginPath();
-            const spikes = 5;
-            const outerRadius = p.size;
-            const innerRadius = p.size / 2;
-            let rot = (Math.PI / 2) * 3;
-            let cx = p.x;
-            let cy = p.y;
-            let x = cx;
-            let y = cy;
-            const step = Math.PI / spikes;
-
-            this.ctx.moveTo(cx, cy - outerRadius);
-            for (let j = 0; j < spikes; j++) {
-              x = cx + Math.cos(rot) * outerRadius;
-              y = cy + Math.sin(rot) * outerRadius;
-              this.ctx.lineTo(x, y);
-              rot += step;
-
-              x = cx + Math.cos(rot) * innerRadius;
-              y = cy + Math.sin(rot) * innerRadius;
-              this.ctx.lineTo(x, y);
-              rot += step;
-            }
-            this.ctx.lineTo(cx, cy - outerRadius);
-            this.ctx.closePath();
-            this.ctx.fill();
-            this.ctx.restore();
-          }
-          // Slow ambient drifting background stars
-          else if (p.type === 'back-star') {
-            p.x += p.vx;
-            p.y += p.vy;
-            if (p.y < -15 || p.x < -15 || p.x > this.canvas.width + 15) {
-              this.particles.splice(i, 1);
-              continue;
-            }
-            
-            this.ctx.save();
-            this.ctx.globalAlpha = p.opacity;
-            this.ctx.fillStyle = p.color;
-            this.ctx.beginPath();
-            this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
-            this.ctx.fill();
-            this.ctx.restore();
-          }
-        }
-
-        requestAnimationFrame(() => this.loop());
-      }
-    }
-
-    // --- GAME INITIALIZATION & FLOW ---
-    window.addEventListener('DOMContentLoaded', () => {
-      // Setup particle system canvas
-      const canvas = document.getElementById('confetti-canvas');
-      window.particleSystem = new ParticleSystem(canvas);
-      particleSystem.start();
-      
-      // Inject persistent subtle star background particles
-      setInterval(() => {
-        if (particleSystem.particles.filter(p => p.type === 'back-star').length < 30) {
-          particleSystem.particles.push({
-            type: 'back-star',
-            x: Math.random() * canvas.width,
-            y: canvas.height + 15,
-            vx: -0.15 + Math.random() * 0.3,
-            vy: -0.2 - Math.random() * 0.4,
-            size: 0.8 + Math.random() * 1.8,
-            color: '#ffffff',
-            opacity: 0.15 + Math.random() * 0.35
-          });
-        }
-      }, 350);
-      
-      // Simulated Loading Screen Animation
-      const bar = document.getElementById('loading-bar');
-      const statusText = document.getElementById('loading-status');
-      const startBtn = document.getElementById('start-btn');
-      
-      const loadingStages = [
-        { pct: 20, text: "Anılar sandıktan çıkarılıyor..." },
-        { pct: 45, text: "İksir şişeleri dolduruluyor..." },
-        { pct: 70, text: "Clash Royale kartları karıştırılıyor..." },
-        { pct: 90, text: "Furkan'ın sürprizi hazırlanıyor..." },
-        { pct: 100, text: "Koleksiyon Hazır! 🏆" }
-      ];
-      
-      let currentPct = 0;
-      const interval = setInterval(() => {
-        currentPct += Math.floor(Math.random() * 3) + 2;
-        if (currentPct >= 100) {
-          currentPct = 100;
-          clearInterval(interval);
-          bar.style.width = '100%';
-          statusText.innerHTML = "Koleksiyon Hazır! 🏆";
-          
-          startBtn.classList.remove('hidden');
-          startBtn.style.opacity = '0';
-          startBtn.style.transition = 'opacity 0.6s ease';
-          setTimeout(() => startBtn.style.opacity = '1', 50);
-        } else {
-          bar.style.width = `${currentPct}%`;
-          const stage = loadingStages.find(s => currentPct <= s.pct) || loadingStages[loadingStages.length - 1];
-          statusText.innerHTML = `${stage.text} ${currentPct}%`;
-        }
-      }, 70);
-      
-      // Hook up start button
-      startBtn.addEventListener('click', () => {
+      try {
         initAudio();
-        playTick();
-        
-        // Hide loading screen
-        const loader = document.getElementById('loading-screen');
-        loader.classList.add('fade-out');
-        
-        // Reveal main game deck
-        const main = document.getElementById('main-content');
-        main.classList.remove('hidden');
-        
-        // Staggered layout entrance for memory cards
-        const cards = document.querySelectorAll('.card-container');
-        cards.forEach((card, idx) => {
-          setTimeout(() => {
-            card.style.opacity = '1';
-            card.style.transform = 'translateY(0) rotate(0deg) scale(1)';
-            card.style.transition = 'opacity 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.2), transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.2)';
-          }, 300 + idx * 180);
-        });
-      });
-      
-      // Setup chest click handler
-      document.getElementById('legendary-chest').addEventListener('click', function() {
-        const chest = this;
-        if (chest.classList.contains('opening-shake')) return;
-        
-        chest.classList.add('opening-shake');
-        
-        // Rapid 8-bit tick sweep sound effect
-        let tickCount = 0;
-        const tickInterval = setInterval(() => {
-          playTick();
-          tickCount++;
-          if (tickCount >= 10) clearInterval(tickInterval);
-        }, 110);
-        
-        setTimeout(() => {
-          // Sparkle blast on screen
-          const rect = chest.getBoundingClientRect();
-          const centerX = rect.left + rect.width / 2;
-          const centerY = rect.top + rect.height / 2;
-          particleSystem.addExplosion(centerX, centerY, 130);
-          particleSystem.addConfetti(90);
-          
-          playYes();
-          
-          // Smoothly reveal proposal modal
-          document.getElementById('chest-trigger-section').classList.add('fade-out');
-          
-          setTimeout(() => {
-            document.getElementById('chest-trigger-section').classList.add('hidden');
-            const modal = document.getElementById('invitation-modal');
-            modal.classList.remove('hidden');
-            void modal.offsetWidth; // force redraw
-            modal.classList.add('active');
-          }, 800);
-        }, 1400);
-      });
+        const now = audioCtx.currentTime;
+        const playTriumphantNote = (freq, start, duration, volume = 0.06) => {
+          const osc = audioCtx.createOscillator();
+          const gain = audioCtx.createGain();
+          osc.type = 'triangle';
+          osc.frequency.setValueAtTime(freq, now + start);
+          gain.gain.setValueAtTime(0, now + start);
+          gain.gain.linearRampToValueAtTime(volume, now + start + 0.02);
+          gain.gain.exponentialRampToValueAtTime(0.001, now + start + duration);
+          osc.connect(gain);
+          gain.connect(audioCtx.destination);
+          osc.start(now + start);
+          osc.stop(now + start + duration);
+        };
 
-      // Hook up Yes button click
-      document.getElementById('evet-btn').addEventListener('click', () => {
-        playYes();
-        
-        // Trigger massive fireworks and heart drops
-        particleSystem.addConfetti(280);
-        particleSystem.addHearts(90);
-        
-        // Persistent heart rain
-        setInterval(() => {
-          particleSystem.addHearts(4);
-        }, 1000);
-        
-        // Swap content inside modal to show success message
-        document.getElementById('invitation-content').classList.add('hidden');
-        document.getElementById('success-view').classList.remove('hidden');
-      });
+        // Royal arpeggio build up
+        playTriumphantNote(523.25, 0, 0.2);     // C5
+        playTriumphantNote(659.25, 0.15, 0.2);  // E5
+        playTriumphantNote(783.99, 0.3, 0.2);   // G5
+        playTriumphantNote(1046.50, 0.45, 0.4, 0.08); // C6
 
-      // Escape Logic for Hayır button
-      const hayirBtn = document.getElementById('hayir-btn');
-      let moveCount = 0;
+        // Chords Fanfare
+        // F Major chord (F5, A5, C6)
+        playTriumphantNote(698.46, 0.7, 0.25, 0.05);
+        playTriumphantNote(880.00, 0.7, 0.25, 0.05);
+        playTriumphantNote(1046.50, 0.7, 0.25, 0.05);
 
-      function escapeHayir() {
-        playTick();
-        const btnRect = hayirBtn.getBoundingClientRect();
-        const pad = 24; 
-        
-        const container = document.querySelector('.invitation-card');
-        const containerRect = container.getBoundingClientRect();
-        
-        const minX = -btnRect.left + containerRect.left + pad;
-        const maxX = containerRect.right - btnRect.right - pad;
-        const minY = -btnRect.top + containerRect.top + pad;
-        const maxY = containerRect.bottom - btnRect.bottom - pad;
-        
-        const randX = minX + Math.random() * (maxX - minX);
-        const randY = minY + Math.random() * (maxY - minY);
-        
-        hayirBtn.style.position = 'absolute';
-        hayirBtn.style.left = `${randX + btnRect.left - containerRect.left}px`;
-        hayirBtn.style.top = `${randY + btnRect.top - containerRect.top}px`;
-        
-        // Change text in a playful sequence
-        moveCount++;
-        const texts = [
-          "Hayır 😅",
-          "I-ıh 😜",
-          "Yalancıktan mı? 😂",
-          "Yakalayamazsın! 🏃‍♂️",
-          "Bir daha düşün? 🤔",
-          "Cık! ❌",
-          "Israr ediyorum! 🥺",
-          "Evet de lütfen! 🙏"
-        ];
-        hayirBtn.innerText = texts[moveCount % texts.length];
+        // G Major chord (G5, B5, D6)
+        playTriumphantNote(783.99, 0.9, 0.25, 0.05);
+        playTriumphantNote(987.77, 0.9, 0.25, 0.05);
+        playTriumphantNote(1174.66, 0.9, 0.25, 0.05);
+
+        // Resolution: Big C Major 6th Chord
+        playTriumphantNote(523.25, 1.15, 0.8, 0.06);
+        playTriumphantNote(659.25, 1.15, 0.8, 0.06);
+        playTriumphantNote(783.99, 1.15, 0.8, 0.06);
+        playTriumphantNote(1046.50, 1.15, 0.8, 0.08);
+      } catch(e) {
+        console.error("Audio error:", e);
+      }
+    }
+
+
+    // --- CANVAS PARTICLE SYSTEM ENGINE ---
+    const canvas = document.getElementById('particleCanvas');
+    const ctx = canvas.getContext('2d');
+    let particles = [];
+    let isVictory = false;
+
+    function resizeCanvas() {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    class Particle {
+      constructor(x, y, type, color, size, vx, vy) {
+        this.x = x;
+        this.y = y;
+        this.type = type; // 'star', 'bubble', 'sparkle', 'confetti', 'heart'
+        this.color = color;
+        this.size = size || Math.random() * 4 + 2;
+        this.vx = vx || 0;
+        this.vy = vy || 0;
+        this.alpha = 1;
+        this.life = 1.0;
+        this.decay = Math.random() * 0.015 + 0.005;
+        this.angle = Math.random() * Math.PI * 2;
+        this.rotationSpeed = Math.random() * 0.15 - 0.075;
+        this.wiggleSpeed = Math.random() * 0.03 + 0.01;
+        this.wiggleOffset = Math.random() * 100;
       }
 
-      hayirBtn.addEventListener('mouseenter', escapeHayir);
-      hayirBtn.addEventListener('touchstart', (e) => {
-        e.preventDefault(); 
-        escapeHayir();
-      });
-      hayirBtn.addEventListener('click', (e) => {
-        e.preventDefault();
-        escapeHayir();
-      });
+      update() {
+        if (this.type === 'bubble') {
+          this.y += this.vy;
+          this.x += Math.sin(this.y * this.wiggleSpeed + this.wiggleOffset) * 0.4;
+          if (this.y < -50) {
+            this.y = canvas.height + 50;
+            this.x = Math.random() * canvas.width;
+          }
+        } else if (this.type === 'star') {
+          this.alpha += this.decay;
+          if (this.alpha > 1 || this.alpha < 0.15) {
+            this.decay = -this.decay;
+          }
+          this.y += this.vy;
+          if (this.y < -50) {
+            this.y = canvas.height + 50;
+            this.x = Math.random() * canvas.width;
+          }
+        } else if (this.type === 'sparkle') {
+          this.x += this.vx;
+          this.y += this.vy;
+          this.vx *= 0.95;
+          this.vy *= 0.95;
+          this.alpha -= this.decay * 1.6;
+        } else if (this.type === 'confetti') {
+          this.x += this.vx;
+          this.y += this.vy;
+          this.vy += 0.14; // gravity
+          this.vx *= 0.97;
+          this.angle += this.rotationSpeed;
+          this.alpha -= this.decay;
+        } else if (this.type === 'heart') {
+          this.y += this.vy;
+          this.x += Math.sin(this.y * this.wiggleSpeed + this.wiggleOffset) * 0.8;
+          this.alpha -= this.decay * 0.45;
+        }
+        
+        this.life -= this.decay;
+      }
+
+      draw() {
+        ctx.save();
+        ctx.globalAlpha = Math.max(0, this.alpha);
+
+        if (this.type === 'star') {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fillStyle = this.color || 'rgba(255, 230, 100, 0.7)';
+          ctx.fill();
+        } else if (this.type === 'bubble') {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          let grad = ctx.createRadialGradient(
+            this.x - this.size * 0.25, 
+            this.y - this.size * 0.25, 
+            this.size * 0.05, 
+            this.x, 
+            this.y, 
+            this.size
+          );
+          grad.addColorStop(0, 'rgba(255, 185, 255, 0.55)');
+          grad.addColorStop(0.5, 'rgba(189, 0, 255, 0.25)');
+          grad.addColorStop(1, 'rgba(90, 0, 150, 0.05)');
+          ctx.fillStyle = grad;
+          ctx.fill();
+        } else if (this.type === 'sparkle') {
+          ctx.beginPath();
+          ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+          ctx.fillStyle = this.color;
+          ctx.shadowBlur = 8;
+          ctx.shadowColor = this.color;
+          ctx.fill();
+        } else if (this.type === 'confetti') {
+          ctx.translate(this.x, this.y);
+          ctx.rotate(this.angle);
+          ctx.fillStyle = this.color;
+          const scaleX = Math.sin(this.angle * 1.5);
+          ctx.fillRect(-this.size, -this.size / 2, this.size * 2 * scaleX, this.size);
+        } else if (this.type === 'heart') {
+          ctx.beginPath();
+          ctx.moveTo(this.x, this.y + this.size * 0.25);
+          ctx.bezierCurveTo(
+            this.x - this.size / 1.8, 
+            this.y - this.size / 2.2, 
+            this.x - this.size, 
+            this.y + this.size / 3.5, 
+            this.x, 
+            this.y + this.size
+          );
+          ctx.bezierCurveTo(
+            this.x + this.size, 
+            this.y + this.size / 3.5, 
+            this.x + this.size / 1.8, 
+            this.y - this.size / 2.2, 
+            this.x, 
+            this.y + this.size * 0.25
+          );
+          ctx.fillStyle = this.color;
+          ctx.shadowBlur = 4;
+          ctx.shadowColor = this.color;
+          ctx.fill();
+        }
+
+        ctx.restore();
+      }
+    }
+
+    // Initialize stars & elixir background bubbles
+    function initBackgroundParticles() {
+      for (let i = 0; i < 35; i++) {
+        particles.push(new Particle(
+          Math.random() * canvas.width,
+          Math.random() * canvas.height,
+          'bubble',
+          null,
+          Math.random() * 8 + 4,
+          0,
+          -(Math.random() * 0.4 + 0.15)
+        ));
+      }
+      for (let i = 0; i < 25; i++) {
+        particles.push(new Particle(
+          Math.random() * canvas.width,
+          Math.random() * canvas.height,
+          'star',
+          null,
+          Math.random() * 1.8 + 0.8,
+          0,
+          -(Math.random() * 0.1 + 0.02)
+        ));
+      }
+    }
+
+    function spawnCardOpeningSparkles(x, y, color) {
+      for (let i = 0; i < 35; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 6.5 + 2;
+        particles.push(new Particle(
+          x,
+          y,
+          'sparkle',
+          color,
+          Math.random() * 4.5 + 2,
+          Math.cos(angle) * speed,
+          Math.sin(angle) * speed
+        ));
+      }
+    }
+
+    function spawnChestExplosion(x, y) {
+      const colors = ['#00f0ff', '#ffd700', '#bd00ff', '#ff3060', '#ff8a00', '#fff'];
+      for (let i = 0; i < 120; i++) {
+        const angle = Math.random() * Math.PI * 2;
+        const speed = Math.random() * 8 + 3.5;
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        particles.push(new Particle(
+          x,
+          y,
+          'confetti',
+          color,
+          Math.random() * 5.5 + 5.5,
+          Math.cos(angle) * speed,
+          Math.sin(angle) * speed - 2.5
+        ));
+      }
+    }
+
+    function renderVictoryOverlay() {
+      const colors = ['#ffd700', '#bd00ff', '#00f0ff', '#ff3060', '#ff8a00', '#4caf50'];
+      const heartColors = ['#ff3060', '#ff6bb0', '#ff007f', '#ff1a1a'];
+      
+      // Spawn falling confetti
+      if (Math.random() < 0.24) {
+        particles.push(new Particle(
+          Math.random() * canvas.width,
+          -15,
+          'confetti',
+          colors[Math.floor(Math.random() * colors.length)],
+          Math.random() * 5 + 5,
+          Math.random() * 2 - 1,
+          Math.random() * 2.8 + 1.8
+        ));
+      }
+      
+      // Spawn rising hearts
+      if (Math.random() < 0.18) {
+        particles.push(new Particle(
+          Math.random() * canvas.width,
+          canvas.height + 15,
+          'heart',
+          heartColors[Math.floor(Math.random() * heartColors.length)],
+          Math.random() * 11 + 7,
+          Math.random() * 1.6 - 0.8,
+          -(Math.random() * 2.2 + 0.8)
+        ));
+      }
+    }
+
+    function animationTick() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      if (isVictory) {
+        renderVictoryOverlay();
+      }
+
+      for (let i = particles.length - 1; i >= 0; i--) {
+        const p = particles[i];
+        p.update();
+        p.draw();
+
+        // Keep stars and bubbles alive forever, recycle them. Delete only temporary particles.
+        if (p.life <= 0 && p.type !== 'bubble' && p.type !== 'star') {
+          particles.splice(i, 1);
+        }
+      }
+
+      requestAnimationFrame(animationTick);
+    }
+
+    // Start particle system
+    initBackgroundParticles();
+    requestAnimationFrame(animationTick);
+
+
+    // --- SIMULATED LOADING BAR PROCESS ---
+    const loadingStatuses = [
+      "İksir şişeleri dolduruluyor...", // 0 - 20%
+      "Elixir Golemi uyandırılıyor...", // 20 - 45%
+      "Clash kartları karıştırılıyor...", // 45 - 70%
+      "Furkan'ın sürprizi hazırlanıyor...", // 70 - 90%
+      "Koleksiyon Hazır! 🏆" // 90 - 100%
+    ];
+
+    let progress = 0;
+    const progressInterval = setInterval(() => {
+      progress += Math.floor(Math.random() * 4) + 2; // Increments randomly
+      if (progress >= 100) {
+        progress = 100;
+        clearInterval(progressInterval);
+        onLoadingComplete();
+      }
+      
+      // Update loading bar UI elements
+      document.getElementById('loadingBarInner').style.width = progress + '%';
+      document.getElementById('loadingProgressText').textContent = progress + '%';
+      
+      // Update loading status label
+      if (progress < 20) {
+        document.getElementById('loadingStatus').textContent = loadingStatuses[0];
+      } else if (progress < 45) {
+        document.getElementById('loadingStatus').textContent = loadingStatuses[1];
+      } else if (progress < 70) {
+        document.getElementById('loadingStatus').textContent = loadingStatuses[2];
+      } else if (progress < 90) {
+        document.getElementById('loadingStatus').textContent = loadingStatuses[3];
+      } else {
+        document.getElementById('loadingStatus').textContent = loadingStatuses[4];
+      }
+    }, 60);
+
+    function onLoadingComplete() {
+      // Fade out loading bar wrapper, display 'Arena Entry' button
+      setTimeout(() => {
+        document.getElementById('loadingBarOuter').style.display = 'none';
+        document.getElementById('loadingProgressText').style.display = 'none';
+        document.getElementById('enterBtn').style.display = 'block';
+      }, 300);
+    }
+
+
+    // --- ENTER THE ARENA ACTION ---
+    document.getElementById('enterBtn').addEventListener('click', () => {
+      initAudio();
+      playTick();
+      
+      // Transition from loading screen to arena
+      document.getElementById('loadingScreen').classList.remove('active');
+      setTimeout(() => {
+        document.getElementById('loadingScreen').style.display = 'none';
+      }, 600);
+      
+      document.getElementById('arenaScreen').classList.add('active');
     });
 
-    // --- CARD FLIP MANAGEMENT ---
-    const flippedCards = new Set();
 
-    function flipCard(container, cardId) {
-      const card = container.querySelector('.card');
-      if (card.classList.contains('flipped')) return;
+    // --- INTERACTIVE CARD MECHANICS ---
+    let openedCardCount = 0;
+    const cardsOpenedSet = new Set();
+    const rarityColors = {
+      1: '#bd00ff', // Epic - Purple
+      2: '#ff9000', // Rare - Orange
+      3: '#a1a1af', // Common - Grey
+      4: '#00f0ff', // Legendary - Turquoise
+      5: '#ffd700'  // Champion - Gold
+    };
+
+    function openCard(cardNum, event) {
+      if (cardsOpenedSet.has(cardNum)) return;
       
-      card.classList.add('flipped');
+      event.stopPropagation();
+      cardsOpenedSet.add(cardNum);
+      openedCardCount++;
+      
+      // Synthesize arpeggio
       playFlip();
       
-      flippedCards.add(cardId);
+      // Card elements trigger flip transitions
+      const cardEl = document.getElementById(`card-${cardNum}`);
+      cardEl.classList.add('flipped');
+
+      // Bounding calculation for precise sparkle explosion position
+      const cardRect = cardEl.getBoundingClientRect();
+      const clickX = cardRect.left + cardRect.width / 2;
+      const clickY = cardRect.top + cardRect.height / 2;
+      spawnCardOpeningSparkles(clickX, clickY, rarityColors[cardNum]);
+
+      // Calculate updates
+      const targetTrophies = 4500 + (openedCardCount * 100);
+      animateTrophyCount(targetTrophies);
       
-      // Update counters
-      const count = flippedCards.size;
-      document.getElementById('collected-count').innerText = count;
-      
-      const elixirFill = document.getElementById('elixir-fill');
-      const elixirNum = document.getElementById('elixir-num');
-      const elixirVal = count * 2;
-      elixirFill.style.width = `${elixirVal * 10}%`;
-      elixirNum.textContent = elixirVal;
-      
-      // Card specific splash explosion
-      const rect = container.getBoundingClientRect();
-      const centerX = rect.left + rect.width / 2;
-      const centerY = rect.top + rect.height / 2;
-      particleSystem.addExplosion(centerX, centerY, 35);
-      
-      // Handle completion
-      if (count === 5) {
-        setTimeout(() => {
-          playComplete();
-          particleSystem.addConfetti(140);
-          
-          // Fade deck and details down
-          document.getElementById('cards-deck').classList.add('fade-out');
-          document.querySelector('.status-panel').classList.add('fade-out');
-          
-          setTimeout(() => {
-            document.getElementById('cards-deck').classList.add('hidden');
-            document.querySelector('.status-panel').classList.add('hidden');
-            document.getElementById('chest-trigger-section').classList.remove('hidden');
-          }, 800);
-        }, 1100);
+      // Elixir Bar increases (+2 points per card, total 10 points)
+      const targetElixir = openedCardCount * 2;
+      document.getElementById('elixirBarFill').style.width = (targetElixir * 10) + '%';
+      document.getElementById('elixirBadgeText').textContent = targetElixir;
+
+      // Update counters labels
+      document.getElementById('cardCounterLabel').textContent = `KART: ${openedCardCount}/5`;
+
+      // Check if deck completion triggers
+      if (openedCardCount === 5) {
+        setTimeout(transitionDeckToChest, 2200);
       }
+    }
+
+    function animateTrophyCount(targetValue) {
+      const trophyEl = document.getElementById('trophyCount');
+      let currentVal = parseInt(trophyEl.textContent);
+      const stepValue = 2; 
+      
+      const trophyInterval = setInterval(() => {
+        currentVal += stepValue;
+        if (currentVal >= targetValue) {
+          currentVal = targetValue;
+          clearInterval(trophyInterval);
+        }
+        trophyEl.textContent = currentVal;
+      }, 15);
+    }
+
+    function transitionDeckToChest() {
+      // Complete sound fanfare chimes
+      playComplete();
+      
+      // Fade out card deck + elixir bottom controls
+      const deckEl = document.getElementById('deckContainer');
+      const bottomBarEl = document.getElementById('arenaBottomBar');
+      
+      deckEl.style.transition = 'opacity 0.8s ease, transform 0.8s ease';
+      deckEl.style.opacity = '0';
+      deckEl.style.transform = 'translateY(-20px)';
+      
+      bottomBarEl.style.transition = 'opacity 0.6s ease';
+      bottomBarEl.style.opacity = '0';
+      bottomBarEl.style.pointerEvents = 'none';
+
+      setTimeout(() => {
+        deckEl.style.display = 'none';
+        
+        // Activate Legendary Chest presentation section
+        const chestSec = document.getElementById('chestSection');
+        chestSec.style.display = 'flex';
+        // force layout recalculation
+        chestSec.offsetHeight;
+        chestSec.classList.add('active');
+      }, 850);
+    }
+
+
+    // --- LEGENDARY CHEST REVEAL ENGINE ---
+    let isChestOpening = false;
+
+    function unlockChest(event) {
+      if (isChestOpening) return;
+      isChestOpening = true;
+
+      playTick();
+
+      const wrapper = document.getElementById('chestWrapper');
+      wrapper.classList.add('shaking');
+
+      const chestRect = wrapper.getBoundingClientRect();
+      const centerX = chestRect.left + chestRect.width / 2;
+      const centerY = chestRect.top + chestRect.height / 2;
+
+      // Emit visual sparks during shaking physics
+      let sparkInterval = setInterval(() => {
+        spawnCardOpeningSparkles(centerX, centerY, '#00f0ff');
+      }, 100);
+
+      // Play dramatic completion fanfare
+      setTimeout(() => {
+        clearInterval(sparkInterval);
+        
+        // Massive explosion particle splash
+        spawnChestExplosion(centerX, centerY);
+        playYes();
+
+        // Hide chest layout screen, show Proposal Modal
+        const chestSec = document.getElementById('chestSection');
+        chestSec.style.transition = 'opacity 0.4s ease';
+        chestSec.style.opacity = '0';
+
+        setTimeout(() => {
+          chestSec.style.display = 'none';
+          document.getElementById('proposalModal').classList.add('active');
+        }, 400);
+
+      }, 1200);
+    }
+
+
+    // --- ESCAPE-PROOF 'HAYIR' BUTTON ALGORITHM ---
+    const noBtn = document.getElementById('noBtn');
+    const modalContent = document.querySelector('.modal-content');
+    let noEscapeCount = 0;
+
+    const noLabels = [
+      "Hayır 😅",
+      "I-ıh 😜",
+      "Yalancıktan mı? 😂",
+      "Yakalayamazsın! 🏃‍♂️",
+      "Bir daha düşün? 🤔",
+      "Çık! ❌",
+      "Israr ediyorum! 🥺",
+      "Evet de lütfen! 🙏"
+    ];
+
+    function escapeButtonAction(event) {
+      if (event) event.preventDefault();
+      
+      // Sound cue plays on attempts
+      playTick();
+
+      // Cycle texts
+      noEscapeCount++;
+      const textIndex = Math.min(noEscapeCount, noLabels.length - 1);
+      noBtn.textContent = noLabels[textIndex];
+
+      // Read dimensions dynamically
+      const contentRect = modalContent.getBoundingClientRect();
+      const btnRect = noBtn.getBoundingClientRect();
+
+      // Enforce border boundaries (keeping it inside modal-content)
+      const padding = 20;
+      const minX = padding;
+      const maxX = contentRect.width - btnRect.width - padding;
+      const minY = 110; // Stay below the title text layout area
+      const maxY = contentRect.height - btnRect.height - padding;
+
+      // Perform random coordinate distribution
+      const randomX = Math.max(minX, Math.floor(Math.random() * (maxX - minX) + minX));
+      const randomY = Math.max(minY, Math.floor(Math.random() * (maxY - minY) + minY));
+
+      // Apply coordinates absolute layout changes
+      noBtn.style.position = 'absolute';
+      noBtn.style.left = `${randomX}px`;
+      noBtn.style.top = `${randomY}px`;
+      noBtn.style.margin = '0';
+    }
+
+    // Attach mouseenter, touchstart, and click event handlers
+    noBtn.addEventListener('mouseenter', escapeButtonAction);
+    noBtn.addEventListener('touchstart', escapeButtonAction);
+    noBtn.addEventListener('click', escapeButtonAction);
+
+
+    // --- YES/ACCEPT ACTION (VICTORY COMES) ---
+    function acceptProposal(event) {
+      if (event) event.preventDefault();
+      
+      // Play grand triumphant melodies
+      playYes();
+
+      // Hide modal overlay
+      document.getElementById('proposalModal').classList.remove('active');
+
+      setTimeout(() => {
+        document.getElementById('proposalModal').style.display = 'none';
+        
+        // Activate victory display screen + trigger overdrive particles
+        isVictory = true;
+        document.getElementById('victoryScreen').classList.add('active');
+        
+        // Spawn huge visual explosion
+        spawnChestExplosion(window.innerWidth / 2, window.innerHeight / 2);
+      }, 500);
     }
   </script>
 </body>

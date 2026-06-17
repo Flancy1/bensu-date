@@ -1,39 +1,39 @@
-# Bensu'ya Çağrı 🎮💛
+# 🎮 Bensu'nun Arenası — Bensu Date
 
-**Bensu'yu date'e çağırmak için interaktif, Clash Royale temalı bir web sitesi!**
+Bensu'ya özel, Clash Royale temalı interaktif bir sürpriz sayfa. 5 anı kartını aç, iksir barını doldur, efsanevi sandığı aç ve soruyu sor!
 
-9 aylık anıları kartlar halinde toplayıp, sonunda onu bir randevuya davet eden oyun gibi bir deneyim.
+## Özellikler
 
-## Nasıl Çalışır?
+- **Clash Royale estetiği** — Koyu arena teması, nadirlik sistemli kartlar, mor iksir barı
+- **Purple Elixir Golem teması** 💜 — Furkan'ın en sevdiği CR karakterine özel
+- **5 anı kartı** — Mandalina & Kalem, Yer Fıstığı, Telefon Süsü, Clash & İksir Golemi, İlk Yemek
+- **İksir barı** — Her kart açıldıkça dolan mor iksir barı
+- **Efsanevi Sandık** — Tüm kartlar toplanınca açılan ödül sandığı
+- **Kaçan "Hayır" butonu** — Üzerine gelince kaçar, yazısı değişir
+- **Partikül efektleri** — Confetti, kalp yağmuru, patlama animasyonları
+- **8-bit ses efektleri** — Web Audio API ile sentezlenmiş CR tarzı sesler
 
-1. **Açılış:** Bir sandık animasyonu ve yükleme ekranı
-2. **Kartları Topla:** 5 adet anı kartını tek tek aç
-3. **Sandığı Aç:** Tüm kartlar toplanınca efsanevi sandık belirir
-4. **Davet:** Bensu'ya çıkma teklifi — "Evet" butonu kutlama başlatır, "Hayır" butonu kaçar 😅
-
-## Local'de Çalıştırma
+## Nasıl Çalıştırılır?
 
 ```bash
-# 1. Repoyu klonla
+# Projeyi clone'la
 git clone https://github.com/Flancy1/bensu-date.git
 cd bensu-date
 
-# 2. Herhangi bir tarayıcıda aç — sunucuya gerek yok!
-open index.html   # macOS
-# veya
-xdg-open index.html  # Linux
-# veya çift tıkla direkt aç
+# Herhangi bir HTTP sunucusu ile aç
+python3 -m http.server 8080
+# Tarayıcında http://localhost:8080 adresine git
 ```
 
-Her şey **tek bir HTML dosyasında** — hiçbir bağımlılık yok, npm install gerekmez. İnternet bağlantısı sadece Google Fonts için gerekli (yoksa sistem fontu kullanır).
+Veya direkt `index.html`'i tarayıcında aç (Google Fonts için internet gerekli).
 
-## Tasarım
+## Teknolojiler
 
-- **Tema:** Clash Royale — karanlık arkaplan, altın/detaylar, nadirlik seviyeleri
-- **Animasyonlar:** CSS 3D kart çevirme, partikül efektleri, sandık sallanması
-- **İç şakalar:** Mandalina-kalem takası, yer fıstığı sürprizi, telefon süsü, Clash Royale, ilk yemek
-- **Mobil uyumlu:** Telefonda da harika çalışır
+- Saf HTML + CSS + JavaScript (tek dosya, framework yok)
+- Canvas API (partikül sistemi)
+- Web Audio API (ses sentezi)
+- Clash Royale görsel tasarım dili
 
----
+## Lisans
 
-Made with 💛 by Furkan & Hermes Agent
+MIT
