@@ -1,0 +1,1934 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Bensu için özel bir şey...</title>
+  <!-- Google Fonts for Outfit (Gaming Style) & Inter (Clean UI) -->
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@500;700;900&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  
+  <style>
+    :root {
+      --bg-dark: #0f1020;
+      --bg-darker: #070811;
+      --gold: #ffd700;
+      --gold-light: #ffe652;
+      --gold-dark: #b8860b;
+      --purple: #6c63ff;
+      --purple-dark: #4c3fa6;
+      --teal: #00d4aa;
+      --teal-dark: #00bfa5;
+      
+      --common-glow: rgba(93, 109, 126, 0.4);
+      --rare-glow: rgba(255, 159, 0, 0.5);
+      --epic-glow: rgba(184, 46, 239, 0.6);
+      --legendary-glow: rgba(0, 255, 196, 0.7);
+      --champion-glow: rgba(255, 215, 0, 0.8);
+
+      --font-header: 'Outfit', system-ui, -apple-system, sans-serif;
+      --font-body: 'Inter', system-ui, -apple-system, sans-serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      margin: 0;
+      padding: 0;
+      background: radial-gradient(circle at center, var(--bg-dark) 0%, var(--bg-darker) 100%);
+      color: #ffffff;
+      font-family: var(--font-body);
+      overflow-x: hidden;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: flex-start;
+    }
+
+    /* Full-Screen Canvas for Confetti & Particles */
+    #confetti-canvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: 99;
+      pointer-events: none;
+    }
+
+    /* --- LOADING SCREEN --- */
+    .screen-overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      background: radial-gradient(circle at center, #1b1b3a 0%, #0a0a14 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 100;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+    }
+    
+    .loading-container {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      width: 90%;
+      max-width: 400px;
+    }
+
+    .royal-text {
+      font-family: var(--font-header);
+      font-weight: 900;
+      text-transform: uppercase;
+      color: #ffffff;
+      text-shadow: 
+        -2.5px -2.5px 0 #000,  
+         2.5px -2.5px 0 #000,
+        -2.5px  2.5px 0 #000,
+         2.5px  2.5px 0 #000,
+        0px 5px 12px rgba(0,0,0,0.8),
+        0px 0px 15px rgba(108, 99, 255, 0.4);
+      letter-spacing: 1px;
+    }
+
+    .gold-text {
+      background: linear-gradient(to bottom, #ffe652 0%, #ffd700 45%, #c69320 90%, #8e6200 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      filter: drop-shadow(0px 2.5px 0px #000);
+    }
+
+    .loading-logo {
+      font-size: 2.3rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .loading-subtitle {
+      font-size: 1rem;
+      color: #b0b0d0;
+      margin-bottom: 1.8rem;
+      font-family: var(--font-body);
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+
+    .loading-chest-wrapper {
+      margin-bottom: 1.5rem;
+      animation: float 3s ease-in-out infinite;
+    }
+
+    @keyframes float {
+      0% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-12px) rotate(1.5deg); }
+      100% { transform: translateY(0px) rotate(0deg); }
+    }
+
+    .svg-chest {
+      filter: drop-shadow(0 6px 15px rgba(0,0,0,0.6));
+    }
+
+    .glow-pulse {
+      animation: glowPulse 2s ease-in-out infinite;
+    }
+
+    @keyframes glowPulse {
+      0% { r: 35px; fill-opacity: 0.4; }
+      50% { r: 48px; fill-opacity: 0.75; }
+      100% { r: 35px; fill-opacity: 0.4; }
+    }
+
+    .gem-shine {
+      animation: gemShine 1.5s infinite alternate;
+    }
+
+    @keyframes gemShine {
+      0% { fill: #00ffff; filter: drop-shadow(0 0 2px #00ffff); }
+      100% { fill: #ffffff; filter: drop-shadow(0 0 8px #00ffff); }
+    }
+
+    .loading-bar-wrapper {
+      width: 100%;
+      height: 24px;
+      background: #121224;
+      border: 3.5px solid #3c3c5e;
+      border-radius: 12px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: inset 0 3px 6px rgba(0,0,0,0.6);
+      margin-bottom: 0.8rem;
+    }
+
+    .loading-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(to right, #ffd700, #ffe652, #ff9f1c);
+      box-shadow: 0 0 12px var(--gold);
+      border-radius: 8px;
+      transition: width 0.1s ease;
+      position: relative;
+    }
+
+    .loading-shine {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(
+        90deg,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,0.45) 50%,
+        rgba(255,255,255,0) 100%
+      );
+      animation: shine-sweep 1.8s infinite linear;
+      background-size: 200% 100%;
+    }
+
+    @keyframes shine-sweep {
+      0% { background-position: -150% 0; }
+      100% { background-position: 150% 0; }
+    }
+
+    .loading-status {
+      color: var(--gold-light);
+      font-size: 0.9rem;
+      margin-bottom: 2rem;
+      height: 20px;
+      font-weight: 600;
+      letter-spacing: 0.3px;
+    }
+
+    /* --- CLASH ROYALE BUTTONS --- */
+    .royal-btn {
+      font-family: var(--font-header);
+      font-size: 1.25rem;
+      font-weight: 900;
+      text-transform: uppercase;
+      padding: 14px 32px;
+      border: 4px solid #1c1303;
+      border-radius: 14px;
+      cursor: pointer;
+      outline: none;
+      transition: transform 0.1s ease, box-shadow 0.2s ease, filter 0.2s ease;
+      position: relative;
+      overflow: hidden;
+      box-shadow: 
+        0 6px 0 #1c1303,
+        0 12px 20px rgba(0,0,0,0.6);
+      text-shadow: 1px 1.5px 0px #000, -1px -1px 0px #000, 1px -1px 0px #000, -1px 1px 0px #000;
+      color: #fff;
+    }
+
+    .royal-btn:active {
+      transform: translateY(4px);
+      box-shadow: 
+        0 2px 0 #1c1303,
+        0 4px 10px rgba(0,0,0,0.6);
+    }
+
+    .gold-btn {
+      background: linear-gradient(to bottom, #ffe652 0%, #ffd700 40%, #f39c12 100%);
+      border-color: #3e2600;
+    }
+
+    .gold-btn:hover {
+      filter: brightness(1.1);
+    }
+
+    .purple-btn {
+      background: linear-gradient(to bottom, #a176ff 0%, #6c63ff 40%, #4c3fa6 100%);
+      border-color: #1e1136;
+      box-shadow: 
+        0 6px 0 #1e1136,
+        0 12px 20px rgba(0,0,0,0.6);
+    }
+
+    .purple-btn:active {
+      box-shadow: 
+        0 2px 0 #1e1136,
+        0 4px 10px rgba(0,0,0,0.6);
+    }
+
+    .hidden {
+      display: none !important;
+    }
+
+    .fade-out {
+      opacity: 0 !important;
+      pointer-events: none;
+      visibility: hidden;
+    }
+
+    /* --- MAIN CONTAINER --- */
+    .main-container {
+      width: 100%;
+      max-width: 1200px;
+      padding: 20px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      transition: opacity 0.8s ease;
+    }
+
+    .game-header {
+      text-align: center;
+      margin-top: 10px;
+      margin-bottom: 25px;
+    }
+
+    .crown-icon {
+      font-size: 2.2rem;
+      filter: drop-shadow(0 2px 5px rgba(0,0,0,0.5));
+      animation: pulseCrown 1.5s infinite alternate;
+    }
+
+    @keyframes pulseCrown {
+      0% { transform: scale(1); }
+      100% { transform: scale(1.15) rotate(2deg); }
+    }
+
+    .header-title {
+      font-size: 2.6rem;
+      margin: 5px 0 0px 0;
+    }
+
+    .subtitle-desc {
+      color: #a4a4d6;
+      font-size: 0.95rem;
+      margin: 6px 0 0 0;
+      font-weight: 500;
+      letter-spacing: 0.5px;
+    }
+
+    /* --- STATUS PANEL --- */
+    .status-panel {
+      background: rgba(20, 20, 42, 0.7);
+      border: 3.5px solid #2d2654;
+      border-radius: 20px;
+      padding: 16px;
+      width: 90%;
+      max-width: 520px;
+      margin: 0 auto 10px auto;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.6);
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    .cards-counter {
+      font-family: var(--font-header);
+      font-size: 1.15rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      color: #fff;
+      letter-spacing: 0.5px;
+    }
+
+    /* Elixir Bar styling */
+    .elixir-bar-container {
+      display: flex;
+      align-items: center;
+      width: 100%;
+      position: relative;
+      padding-left: 48px;
+      box-sizing: border-box;
+    }
+
+    .elixir-bubble {
+      position: absolute;
+      left: -2px;
+      width: 56px;
+      height: 56px;
+      z-index: 3;
+      filter: drop-shadow(0 4px 6px rgba(0,0,0,0.4));
+      animation: pulseBubble 2s infinite ease-in-out;
+    }
+
+    @keyframes pulseBubble {
+      0% { transform: scale(1); }
+      50% { transform: scale(1.06); }
+      100% { transform: scale(1); }
+    }
+
+    .elixir-drop-svg {
+      width: 100%;
+      height: 100%;
+    }
+
+    .elixir-progress-track {
+      flex-grow: 1;
+      height: 28px;
+      background: #110d24;
+      border: 3.5px solid #4a525d;
+      border-radius: 15px;
+      overflow: hidden;
+      position: relative;
+      box-shadow: inset 0 3px 5px rgba(0,0,0,0.7);
+    }
+
+    .elixir-fill {
+      width: 0%;
+      height: 100%;
+      background: linear-gradient(to bottom, #ff5efb 0%, #b82eef 50%, #7c04ad 100%);
+      box-shadow: 0 0 15px #ff5efb;
+      border-radius: 10px;
+      transition: width 0.5s cubic-bezier(0.4, 0, 0.2, 1);
+      position: relative;
+    }
+
+    .elixir-shine {
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: linear-gradient(
+        90deg,
+        rgba(255,255,255,0) 0%,
+        rgba(255,255,255,0.4) 50%,
+        rgba(255,255,255,0) 100%
+      );
+      animation: shine-sweep 2.2s infinite linear;
+      background-size: 200% 100%;
+    }
+
+    .elixir-label {
+      position: absolute;
+      right: 15px;
+      font-family: var(--font-header);
+      font-weight: 900;
+      font-size: 0.8rem;
+      color: rgba(255, 255, 255, 0.7);
+      pointer-events: none;
+      text-shadow: 1px 1px 2px rgba(0,0,0,0.8);
+      letter-spacing: 1.5px;
+    }
+
+    /* --- CARDS GRID --- */
+    .cards-deck {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(210px, 1fr));
+      gap: 22px;
+      max-width: 1100px;
+      width: 95%;
+      margin: 1.5rem auto 3rem auto;
+      justify-content: center;
+      perspective: 1200px;
+      transition: opacity 0.6s ease, transform 0.6s ease;
+    }
+
+    /* Card Container with initial state for stagger entry */
+    .card-container {
+      width: 210px;
+      height: 310px;
+      margin: 0 auto;
+      perspective: 1200px;
+      cursor: pointer;
+      opacity: 0;
+      transform: translateY(40px) rotate(2deg) scale(0.9);
+    }
+
+    /* The actual rotating card */
+    .card {
+      width: 100%;
+      height: 100%;
+      position: relative;
+      transform-style: preserve-3d;
+      transition: transform 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275), box-shadow 0.3s ease;
+      border-radius: 18px;
+    }
+
+    .card:hover {
+      transform: translateY(-8px);
+    }
+
+    .card.flipped {
+      transform: rotateY(180deg);
+    }
+
+    .card.flipped:hover {
+      transform: rotateY(180deg) translateY(-8px);
+    }
+
+    /* Card Sides */
+    .card-front, .card-back {
+      position: absolute;
+      width: 100%;
+      height: 100%;
+      backface-visibility: hidden;
+      border-radius: 18px;
+      border: 4.5px solid #1c1503;
+      box-sizing: border-box;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: space-between;
+      padding: 14px;
+      overflow: hidden;
+      background-image: 
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.02) 1.5px, transparent 1.5px), 
+        radial-gradient(circle at 0 0, rgba(255, 255, 255, 0.02) 1.5px, transparent 1.5px);
+      background-size: 16px 16px;
+    }
+
+    /* Front side styling */
+    .card-front {
+      background-color: #110f27;
+      background-image: 
+        radial-gradient(circle at center, #27225c 0%, #0d0b21 100%),
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.02) 1.5px, transparent 1.5px);
+      color: #fff;
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.7);
+    }
+
+    /* Shimmery scanline overlay on Card Front */
+    .card-front::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: linear-gradient(
+        to bottom,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0.03) 50%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      background-size: 100% 4px;
+      pointer-events: none;
+    }
+
+    /* Diagonal glare highlight when hovered */
+    .card-front::after {
+      content: '';
+      position: absolute;
+      top: -60%;
+      left: -60%;
+      width: 220%;
+      height: 220%;
+      background: linear-gradient(
+        45deg,
+        rgba(255, 255, 255, 0) 0%,
+        rgba(255, 255, 255, 0) 45%,
+        rgba(255, 255, 255, 0.15) 50%,
+        rgba(255, 255, 255, 0) 55%,
+        rgba(255, 255, 255, 0) 100%
+      );
+      transform: rotate(45deg);
+      pointer-events: none;
+      transition: transform 0.5s ease;
+    }
+
+    .card-container:hover .card-front::after {
+      animation: shine-sweep-card 1.2s forwards;
+    }
+
+    @keyframes shine-sweep-card {
+      0% { transform: translate(-30%, -30%) rotate(45deg); }
+      100% { transform: translate(30%, 30%) rotate(45deg); }
+    }
+
+    /* Mini Cost Badge inside card */
+    .elixir-badge {
+      position: absolute;
+      top: 8px;
+      left: 8px;
+      width: 32px;
+      height: 32px;
+      background: linear-gradient(135deg, #e040fb, #b82eef);
+      border: 2px solid #ffffff;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-family: var(--font-header);
+      font-weight: 900;
+      font-size: 1.1rem;
+      box-shadow: 0 3px 5px rgba(0,0,0,0.5);
+      color: white;
+      z-index: 5;
+    }
+
+    .card-decor {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+      font-size: 1.1rem;
+      opacity: 0.75;
+      color: var(--gold);
+    }
+
+    .front-main {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      flex-grow: 1;
+      gap: 15px;
+      margin-top: 15px;
+    }
+
+    .front-emoji {
+      font-size: 3.5rem;
+      filter: drop-shadow(0 0 10px rgba(108, 99, 255, 0.5));
+      animation: pulseEmoji 2s infinite alternate;
+    }
+
+    @keyframes pulseEmoji {
+      0% { transform: scale(1); filter: drop-shadow(0 0 8px rgba(108, 99, 255, 0.4)); }
+      100% { transform: scale(1.08); filter: drop-shadow(0 0 18px rgba(108, 99, 255, 0.8)); }
+    }
+
+    .front-label {
+      font-family: var(--font-header);
+      font-size: 1.2rem;
+      font-weight: 800;
+      text-align: center;
+      color: #fff;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.8);
+      letter-spacing: 0.3px;
+    }
+
+    .front-reveal-btn {
+      background: linear-gradient(to bottom, #00ffcc, #008f72);
+      border: 2px solid #00221a;
+      border-radius: 8px;
+      padding: 6px 16px;
+      color: white;
+      font-family: var(--font-header);
+      font-weight: 800;
+      font-size: 0.85rem;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+      box-shadow: 0 3px 0 #00221a;
+      margin-bottom: 5px;
+      pointer-events: none; /* Clicking the card container triggers the flip */
+    }
+
+    /* Back side styling */
+    .card-back {
+      background: linear-gradient(135deg, #1b213b 0%, #0c0e1a 100%);
+      transform: rotateY(180deg);
+      box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+    }
+
+    /* Rarity Frame borders and glowing aura */
+    .card.rarity-common { border-color: #5d6d7e; }
+    .card.rarity-common .card-back { border-color: #5d6d7e; box-shadow: 0 0 12px var(--common-glow), inset 0 0 20px rgba(0,0,0,0.8); }
+
+    .card.rarity-rare { border-color: #ff9f00; }
+    .card.rarity-rare .card-back { border-color: #ff9f00; box-shadow: 0 0 16px var(--rare-glow), inset 0 0 20px rgba(0,0,0,0.8); }
+
+    .card.rarity-epic { border-color: #b82eef; }
+    .card.rarity-epic .card-back { border-color: #b82eef; box-shadow: 0 0 18px var(--epic-glow), inset 0 0 20px rgba(0,0,0,0.8); }
+
+    .card.rarity-legendary { border-color: #00ffc4; }
+    .card.rarity-legendary .card-back { border-color: #00ffc4; box-shadow: 0 0 22px var(--legendary-glow), inset 0 0 20px rgba(0,0,0,0.8); }
+
+    .card.rarity-champion { border-color: #ffd700; }
+    .card.rarity-champion .card-back { border-color: #ffd700; box-shadow: 0 0 25px var(--champion-glow), inset 0 0 20px rgba(0,0,0,0.8); }
+
+    .rarity-banner {
+      font-family: var(--font-header);
+      font-weight: 900;
+      font-size: 0.72rem;
+      letter-spacing: 1px;
+      padding: 3px 10px;
+      border-radius: 10px;
+      text-transform: uppercase;
+      color: white;
+      margin-top: 3px;
+    }
+    .rarity-common .rarity-banner { background: #5d6d7e; }
+    .rarity-rare .rarity-banner { background: #ff9f00; }
+    .rarity-epic .rarity-banner { background: #b82eef; }
+    .rarity-legendary .rarity-banner { background: #00ffc4; color: #070811; }
+    .rarity-champion .rarity-banner { background: #ffd700; color: #070811; }
+
+    .back-emoji-holder {
+      width: 58px;
+      height: 58px;
+      background: rgba(255,255,255,0.06);
+      border: 2px solid rgba(255,255,255,0.15);
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      font-size: 2rem;
+      margin: 8px 0;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+    
+    .rarity-common .back-emoji-holder { border-color: rgba(93, 109, 126, 0.4); }
+    .rarity-rare .back-emoji-holder { border-color: rgba(255, 159, 0, 0.6); box-shadow: 0 0 10px rgba(255, 159, 0, 0.3); }
+    .rarity-epic .back-emoji-holder { border-color: rgba(184, 46, 239, 0.6); box-shadow: 0 0 10px rgba(184, 46, 239, 0.3); }
+    .rarity-legendary .back-emoji-holder { border-color: rgba(0, 255, 196, 0.6); box-shadow: 0 0 12px rgba(0, 255, 196, 0.4); }
+    .rarity-champion .back-emoji-holder { border-color: rgba(255, 215, 0, 0.6); box-shadow: 0 0 15px rgba(255, 215, 0, 0.5); }
+
+    .back-title {
+      font-family: var(--font-header);
+      font-size: 1.1rem;
+      font-weight: 900;
+      text-align: center;
+      color: #fff;
+      margin-bottom: 6px;
+      letter-spacing: 0.3px;
+    }
+
+    .back-text {
+      font-size: 0.8rem;
+      line-height: 1.45;
+      color: #d8daf0;
+      text-align: center;
+      flex-grow: 1;
+      overflow-y: auto;
+      padding: 0 4px;
+      font-weight: 500;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .back-footer {
+      font-family: var(--font-header);
+      font-size: 0.8rem;
+      font-weight: 800;
+      color: var(--teal);
+      margin-top: 8px;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+    }
+
+    /* --- CHEST TRIGGER SECTION --- */
+    .chest-trigger-section {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 1.5rem auto 3rem auto;
+      width: 90%;
+      max-width: 500px;
+      text-align: center;
+      animation: fadeInScale 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    @keyframes fadeInScale {
+      0% { opacity: 0; transform: scale(0.8); }
+      100% { opacity: 1; transform: scale(1); }
+    }
+
+    .achievement-banner {
+      font-size: 1.6rem;
+      background: linear-gradient(to right, #ffd700, #ffe652, #ffd700);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 0.5rem;
+      filter: drop-shadow(0 2px 4px rgba(0,0,0,0.6));
+    }
+
+    .chest-hint {
+      font-size: 0.95rem;
+      color: #00ffc4;
+      margin-bottom: 1.5rem;
+      font-family: var(--font-body);
+      font-weight: 600;
+      text-shadow: 0 0 10px rgba(0, 255, 196, 0.3);
+      letter-spacing: 0.5px;
+    }
+
+    .legendary-chest {
+      cursor: pointer;
+      width: 200px;
+      height: 200px;
+      transition: transform 0.3s ease;
+      position: relative;
+    }
+
+    .legendary-chest:hover {
+      transform: scale(1.08);
+    }
+
+    /* Glowing animations for chest */
+    .legendary-aurapulse {
+      animation: auraPulse 2.2s infinite ease-in-out;
+    }
+
+    @keyframes auraPulse {
+      0% { r: 40px; fill-opacity: 0.45; }
+      50% { r: 54px; fill-opacity: 0.9; filter: drop-shadow(0 0 18px #00ffcc); }
+      100% { r: 40px; fill-opacity: 0.45; }
+    }
+
+    .legendary-crystal-pulse {
+      animation: crystalPulse 1.2s infinite alternate;
+    }
+
+    @keyframes crystalPulse {
+      0% { fill: #00ffff; filter: drop-shadow(0 0 2px #00ffff); }
+      100% { fill: #ffffff; filter: drop-shadow(0 0 12px #00ffff); }
+    }
+
+    /* Chest Open Shake animation */
+    .opening-shake {
+      animation: chestShake 1.4s forwards;
+    }
+
+    @keyframes chestShake {
+      0% { transform: translate(0, 0) rotate(0deg) scale(1); }
+      10% { transform: translate(-6px, -3px) rotate(-4deg) scale(1.05); }
+      20% { transform: translate(6px, 3px) rotate(4deg) scale(1.05); }
+      30% { transform: translate(-6px, 3px) rotate(-4deg) scale(1.1); }
+      40% { transform: translate(6px, -3px) rotate(4deg) scale(1.1); }
+      50% { transform: translate(-3px, 3px) rotate(-2deg) scale(1.15); }
+      60% { transform: translate(3px, -3px) rotate(2deg) scale(1.15); }
+      70% { transform: translate(-3px, -3px) rotate(-2deg) scale(1.2); }
+      80% { transform: translate(3px, 3px) rotate(2deg) scale(1.2); }
+      90% { transform: translate(0, 0) rotate(0deg) scale(1.25); }
+      100% { transform: translate(0, 0) rotate(0deg) scale(1.35); opacity: 0; }
+    }
+
+    /* --- THE INVITATION MODAL --- */
+    .invitation-container {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100vw;
+      height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 80;
+      background: radial-gradient(circle at center, rgba(15, 10, 45, 0.95) 0%, rgba(5, 5, 15, 0.98) 100%);
+      opacity: 0;
+      visibility: hidden;
+      transition: opacity 0.8s ease, visibility 0.8s ease;
+      padding: 20px;
+    }
+
+    .invitation-container.active {
+      opacity: 1;
+      visibility: visible;
+    }
+
+    .invitation-card {
+      background: linear-gradient(135deg, #1d183f 0%, #0d0922 100%);
+      border: 4.5px solid #ffd700;
+      border-radius: 24px;
+      box-shadow: 
+        0 0 35px rgba(108, 99, 255, 0.45),
+        0 20px 40px rgba(0,0,0,0.8),
+        inset 0 0 25px rgba(255,255,255,0.05);
+      padding: 35px 25px;
+      width: 100%;
+      max-width: 440px;
+      text-align: center;
+      position: relative;
+      transform: scale(0.85);
+      transition: transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.2);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .invitation-container.active .invitation-card {
+      transform: scale(1);
+    }
+
+    .beating-heart {
+      font-size: 3.8rem;
+      margin-top: 5px;
+      margin-bottom: 15px;
+      animation: heartBeat 1.2s infinite ease-in-out;
+      filter: drop-shadow(0 0 12px #ff4081);
+      display: inline-block;
+    }
+
+    @keyframes heartBeat {
+      0% { transform: scale(1); }
+      15% { transform: scale(1.22); }
+      30% { transform: scale(1); }
+      45% { transform: scale(1.16); }
+      60% { transform: scale(1); }
+      100% { transform: scale(1); }
+    }
+
+    .invitation-title {
+      font-size: 2.1rem;
+      margin: 0 0 15px 0;
+    }
+
+    .invitation-msg {
+      font-size: 1.15rem;
+      line-height: 1.65;
+      color: #e2e4f5;
+      font-weight: 500;
+      margin: 0 0 25px 0;
+      white-space: pre-line;
+      text-shadow: 0 1px 3px rgba(0,0,0,0.5);
+    }
+
+    .btn-wrapper {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 25px;
+      width: 100%;
+      min-height: 75px;
+      position: relative;
+    }
+
+    #evet-btn {
+      min-width: 140px;
+      animation: pulseEvet 1.8s infinite alternate;
+    }
+
+    @keyframes pulseEvet {
+      0% { transform: scale(1); box-shadow: 0 6px 0 #3e2600, 0 12px 20px rgba(255, 215, 0, 0.3); }
+      100% { transform: scale(1.06); box-shadow: 0 6px 0 #3e2600, 0 18px 25px rgba(255, 215, 0, 0.6); }
+    }
+
+    #hayir-btn {
+      min-width: 110px;
+      padding: 11px 22px;
+      font-size: 1rem;
+      background: linear-gradient(to bottom, #5a6268 0%, #343a40 100%);
+      border: 3.5px solid #1a1e21;
+      box-shadow: 
+        0 4px 0 #1a1e21,
+        0 6px 12px rgba(0,0,0,0.4);
+      z-index: 10;
+      transition: top 0.2s cubic-bezier(0.25, 0.8, 0.25, 1), left 0.2s cubic-bezier(0.25, 0.8, 0.25, 1), transform 0.1s ease;
+    }
+
+    #hayir-btn:active {
+      transform: translateY(2px);
+      box-shadow: 0 1px 0 #1a1e21;
+    }
+
+    /* --- SUCCESS VIEW --- */
+    .success-view {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      gap: 15px;
+      animation: scaleUp 0.8s cubic-bezier(0.175, 0.885, 0.32, 1.2);
+      width: 100%;
+    }
+
+    @keyframes scaleUp {
+      0% { transform: scale(0.6); opacity: 0; }
+      100% { transform: scale(1); opacity: 1; }
+    }
+
+    .crown-badge {
+      font-size: 4.8rem;
+      filter: drop-shadow(0 0 15px #ffd700);
+      animation: floatBadge 3.5s ease-in-out infinite;
+      margin-bottom: 5px;
+    }
+
+    @keyframes floatBadge {
+      0% { transform: translateY(0px) rotate(0deg); }
+      50% { transform: translateY(-10px) rotate(-3deg); }
+      100% { transform: translateY(0px) rotate(0deg); }
+    }
+
+    .success-title {
+      font-size: 2.8rem;
+      margin: 0;
+      text-shadow: 0 4px 10px rgba(0,0,0,0.8);
+    }
+
+    .success-decor {
+      font-size: 1.4rem;
+      color: var(--gold-light);
+      letter-spacing: 6px;
+      margin-bottom: 5px;
+    }
+
+    .success-msg {
+      font-size: 1.25rem;
+      line-height: 1.7;
+      color: #ffffff;
+      text-align: center;
+      max-width: 380px;
+      font-weight: 600;
+      text-shadow: 0 2px 4px rgba(0,0,0,0.6);
+      margin: 0;
+    }
+
+    .success-celebration-emoji {
+      font-size: 2.3rem;
+      margin-top: 15px;
+      letter-spacing: 10px;
+      text-align: center;
+    }
+
+    /* --- MOBILE RESPONSIVENESS --- */
+    @media (max-width: 768px) {
+      .header-title {
+        font-size: 2.1rem;
+      }
+      .loading-logo {
+        font-size: 2rem;
+      }
+      .cards-deck {
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+        gap: 15px;
+        padding: 0 10px;
+      }
+      .card-container {
+        width: 160px;
+        height: 250px;
+      }
+      .front-emoji {
+        font-size: 2.8rem;
+      }
+      .front-label {
+        font-size: 1rem;
+      }
+      .back-emoji-holder {
+        width: 46px;
+        height: 46px;
+        font-size: 1.6rem;
+        margin: 5px 0;
+      }
+      .back-title {
+        font-size: 0.95rem;
+        margin-bottom: 4px;
+      }
+      .back-text {
+        font-size: 0.72rem;
+        line-height: 1.35;
+      }
+      .rarity-banner {
+        font-size: 0.65rem;
+        padding: 2px 8px;
+      }
+      .back-footer {
+        font-size: 0.7rem;
+        margin-top: 5px;
+      }
+      .elixir-badge {
+        width: 26px;
+        height: 26px;
+        font-size: 0.9rem;
+        border-width: 1.5px;
+      }
+      .elixir-bubble {
+        width: 48px;
+        height: 48px;
+      }
+      .elixir-bar-container {
+        padding-left: 40px;
+      }
+      .elixir-progress-track {
+        height: 24px;
+      }
+      .elixir-label {
+        font-size: 0.75rem;
+      }
+      .invitation-card {
+        padding: 30px 20px;
+      }
+      .invitation-title {
+        font-size: 1.8rem;
+      }
+      .invitation-msg {
+        font-size: 1.05rem;
+      }
+      .beating-heart {
+        font-size: 3.2rem;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Fullscreen Particle Effects Canvas -->
+  <canvas id="confetti-canvas"></canvas>
+
+  <!-- LOADING SCREEN OVERLAY -->
+  <div id="loading-screen" class="screen-overlay">
+    <div class="loading-container">
+      <div class="loading-logo royal-text gold-text">Maceraya Hazırlık</div>
+      <div class="loading-subtitle">Bensu için özel bir şey...</div>
+      
+      <!-- Floating Closed Chest SVG -->
+      <div class="loading-chest-wrapper">
+        <svg width="110" height="110" viewBox="0 0 120 120" class="svg-chest">
+          <circle cx="60" cy="65" r="42" fill="url(#chestGlow)" class="glow-pulse" />
+          
+          <rect x="25" y="60" width="70" height="40" rx="6" fill="url(#woodGrad)" stroke="#110a06" stroke-width="3" />
+          <path d="M 25 60 C 25 33, 95 33, 95 60 Z" fill="url(#woodGrad)" stroke="#110a06" stroke-width="3" />
+          
+          <rect x="25" y="60" width="10" height="40" fill="url(#metalGrad)" stroke="#110a06" />
+          <rect x="85" y="60" width="10" height="40" fill="url(#metalGrad)" stroke="#110a06" />
+          <path d="M 25 60 C 25 33, 35 33, 35 60 Z" fill="url(#metalGrad)" stroke="#110a06" />
+          <path d="M 85 60 C 85 33, 95 33, 95 60 Z" fill="url(#metalGrad)" stroke="#110a06" />
+          
+          <rect x="52" y="60" width="16" height="40" fill="url(#goldGrad)" stroke="#523902" stroke-width="1.5" />
+          <path d="M 52 60 C 52 33, 68 33, 68 60 Z" fill="url(#goldGrad)" stroke="#523902" stroke-width="1.5" />
+          
+          <polygon points="60,48 70,58 60,68 50,58" fill="url(#crystalGrad)" stroke="#004466" stroke-width="2" class="gem-shine" />
+          <rect x="55" y="58" width="10" height="15" rx="2" fill="url(#goldGrad)" stroke="#523902" stroke-width="1" />
+          <circle cx="60" cy="63" r="2.5" fill="#110a06" />
+          <polygon points="59,64 61,64 62,70 58,70" fill="#110a06" />
+        </svg>
+      </div>
+      
+      <!-- Loaded Bar -->
+      <div class="loading-bar-wrapper">
+        <div id="loading-bar" class="loading-bar">
+          <div class="loading-shine"></div>
+        </div>
+      </div>
+      <div id="loading-status" class="loading-status">Anılar yükleniyor... 0%</div>
+      
+      <!-- Play/Start button triggers initialization of Web Audio -->
+      <button id="start-btn" class="royal-btn gold-btn hidden">Başlat ⚔️</button>
+    </div>
+  </div>
+
+  <!-- MAIN ADVENTURE CONTAINER -->
+  <main id="main-content" class="main-container hidden">
+    <header class="game-header">
+      <div class="crown-icon">👑</div>
+      <h1 class="royal-text gold-text header-title">Kraliyet Albümü</h1>
+      <p class="subtitle-desc">9 Aylık Serüvenin Anı Kartları</p>
+    </header>
+
+    <!-- Progress Dashboard -->
+    <section class="status-panel">
+      <div class="cards-counter">
+        Toplanan Kartlar: <span id="collected-count" class="gold-text">0</span> / 5
+      </div>
+      
+      <!-- Custom Purple Elixir Bar -->
+      <div class="elixir-bar-container">
+        <div class="elixir-bubble">
+          <svg viewBox="0 0 100 100" class="elixir-drop-svg">
+            <path d="M50 15 C20 45, 20 85, 50 95 C80 85, 80 45, 50 15 Z" fill="#b82eef" stroke="#ffffff" stroke-width="6"/>
+            <text x="50" y="65" font-family="var(--font-header)" font-weight="900" font-size="34" fill="#ffffff" text-anchor="middle" id="elixir-num">0</text>
+          </svg>
+        </div>
+        <div class="elixir-progress-track">
+          <div id="elixir-fill" class="elixir-fill">
+            <div class="elixir-shine"></div>
+          </div>
+        </div>
+        <div class="elixir-label">İKSİR</div>
+      </div>
+    </section>
+
+    <!-- Deck of 5 Memories -->
+    <section id="cards-deck" class="cards-deck">
+      
+      <!-- Card 1 -->
+      <div class="card-container" onclick="flipCard(this, 1)">
+        <div class="card rarity-epic">
+          <div class="elixir-badge">2</div>
+          <div class="card-decor">👑</div>
+          <div class="card-front">
+            <div class="front-main">
+              <div class="front-emoji">❓</div>
+              <div class="front-label">İlk Anımız</div>
+            </div>
+            <button class="front-reveal-btn">Aç 🔓</button>
+          </div>
+          <div class="card-back">
+            <div class="rarity-banner">Destansı</div>
+            <div class="back-emoji-holder">📝</div>
+            <div class="back-title">Kalem & Mandalina</div>
+            <div class="back-text">
+              Bir kalem istemiştim, mandalina teklif etmiştin. "Süper kalmiş, garanti veremem her an bozulabilir" demiştin. O gün anladım seninle eğlenebileceğimi.
+            </div>
+            <div class="back-footer">Koleksiyonda</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 2 -->
+      <div class="card-container" onclick="flipCard(this, 2)">
+        <div class="card rarity-rare">
+          <div class="elixir-badge">2</div>
+          <div class="card-decor">👑</div>
+          <div class="card-front">
+            <div class="front-main">
+              <div class="front-emoji">🥜</div>
+              <div class="front-label">Sözümü Tuttum</div>
+            </div>
+            <button class="front-reveal-btn">Aç 🔓</button>
+          </div>
+          <div class="card-back">
+            <div class="rarity-banner">Ender</div>
+            <div class="back-emoji-holder">🥜</div>
+            <div class="back-title">Yer Fıstığı</div>
+            <div class="back-text">
+              Osmaniye'den fıstık getirmiştim, söz vermiştim çünkü. "Oha nasıl hatırlıyorsun" demiştin. Her şeyi hatırlıyorum Bensu.
+            </div>
+            <div class="back-footer">Koleksiyonda</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 3 -->
+      <div class="card-container" onclick="flipCard(this, 3)">
+        <div class="card rarity-common">
+          <div class="elixir-badge">2</div>
+          <div class="card-decor">👑</div>
+          <div class="card-front">
+            <div class="front-main">
+              <div class="front-emoji">📱</div>
+              <div class="front-label">Hiç Beklemiyordun</div>
+            </div>
+            <button class="front-reveal-btn">Aç 🔓</button>
+          </div>
+          <div class="card-back">
+            <div class="rarity-banner">Sıradan</div>
+            <div class="back-emoji-holder">📱</div>
+            <div class="back-title">Telefon Süsü</div>
+            <div class="back-text">
+              Kardeşime telefon süsü alacaktım, sen bulup getirmiştin bile. Kimse arkadaşına böyle bir şey yapmaz. Bu kadar tatlı olmak zorunda mısın?
+            </div>
+            <div class="back-footer">Koleksiyonda</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 4 -->
+      <div class="card-container" onclick="flipCard(this, 4)">
+        <div class="card rarity-legendary">
+          <div class="elixir-badge">2</div>
+          <div class="card-decor">👑</div>
+          <div class="card-front">
+            <div class="front-main">
+              <div class="front-emoji">🎮</div>
+              <div class="front-label">Gece 2'ye Kadar</div>
+            </div>
+            <button class="front-reveal-btn">Aç 🔓</button>
+          </div>
+          <div class="card-back">
+            <div class="rarity-banner">Efsanevi</div>
+            <div class="back-emoji-holder">🎮</div>
+            <div class="back-title">Clash Royale</div>
+            <div class="back-text">
+              Sınavdan bir gece önce 2'ye kadar yazışmıştık. Ve sen bana Clash'ten ekran görüntüsü atıp "duo lazımsa haber et" demiştin. Oyun bahaneydi, seni görmek istemiştin.
+            </div>
+            <div class="back-footer">Koleksiyonda</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Card 5 -->
+      <div class="card-container" onclick="flipCard(this, 5)">
+        <div class="card rarity-champion">
+          <div class="elixir-badge">2</div>
+          <div class="card-decor">👑</div>
+          <div class="card-front">
+            <div class="front-main">
+              <div class="front-emoji">🍜</div>
+              <div class="front-label">Son Buluşma</div>
+            </div>
+            <button class="front-reveal-btn">Aç 🔓</button>
+          </div>
+          <div class="card-back">
+            <div class="rarity-banner">Şampiyon</div>
+            <div class="back-emoji-holder">🍜</div>
+            <div class="back-title">İlk Yemek</div>
+            <div class="back-text">
+              Finalden sonra ilk kez birlikte yemek yemiştik. "Kore'den bana bir şey getirmedin mi" diye sormuştun. Maskeni hâlâ vermedim... belki yüz yüze veririm?
+            </div>
+            <div class="back-footer">Koleksiyonda</div>
+          </div>
+        </div>
+      </div>
+
+    </section>
+
+    <!-- Chest Unlock Section (Visible when 5/5 cards flipped) -->
+    <section id="chest-trigger-section" class="chest-trigger-section hidden">
+      <div class="achievement-banner royal-text">✨ Koleksiyon Tamamlandı! ✨</div>
+      <p class="chest-hint">Ödülünü açmak için Efsanevi Sandığa dokun!</p>
+      
+      <div id="legendary-chest" class="legendary-chest">
+        <svg width="200" height="200" viewBox="0 0 120 120" class="legendary-chest-svg">
+          <circle cx="60" cy="65" r="48" fill="url(#chestGlowLegendary)" class="legendary-aurapulse" />
+
+          <rect x="25" y="62" width="70" height="38" rx="8" fill="url(#legendaryBlue)" stroke="#0b0f1d" stroke-width="3.5" />
+          <path d="M 25 62 C 25 32, 95 32, 95 62 Z" fill="url(#legendaryBlue)" stroke="#0b0f1d" stroke-width="3.5" />
+          
+          <path d="M 25 62 L 35 62 L 35 100 L 29 100 C 27 100, 25 98, 25 96 Z" fill="url(#goldHeavy)" stroke="#3e2e00" stroke-width="1.5" />
+          <path d="M 95 62 L 85 62 L 85 100 L 91 100 C 93 100, 95 98, 95 96 Z" fill="url(#goldHeavy)" stroke="#3e2e00" stroke-width="1.5" />
+          
+          <path d="M 25 62 C 25 32, 35 32, 35 62 Z" fill="url(#goldHeavy)" stroke="#3e2e00" stroke-width="1.5" />
+          <path d="M 95 62 C 95 32, 85 32, 85 62 Z" fill="url(#goldHeavy)" stroke="#3e2e00" stroke-width="1.5" />
+          
+          <rect x="52" y="62" width="16" height="38" fill="url(#goldHeavy)" stroke="#3e2e00" stroke-width="1.5" />
+          <path d="M 52 62 C 52 32, 68 32, 68 62 Z" fill="url(#goldHeavy)" stroke="#3e2e00" stroke-width="1.5" />
+          
+          <polygon points="60,32 70,44 60,56 50,44" fill="url(#rainbowGrad)" stroke="#ffffff" stroke-width="1.5" />
+          
+          <rect x="50" y="58" width="20" height="22" rx="4" fill="url(#goldHeavy)" stroke="#3e2e00" stroke-width="2" />
+          <polygon points="60,60 67,65 67,73 60,78 53,73 53,65" fill="url(#cyanNeon)" stroke="#004466" stroke-width="1.5" class="legendary-crystal-pulse" />
+          <circle cx="60" cy="69" r="2.5" fill="#0b0f1d" />
+          <polygon points="59,70 61,70 62,75 58,75" fill="#0b0f1d" />
+        </svg>
+      </div>
+    </section>
+  </main>
+
+  <!-- INVITATION MODAL OVERLAY -->
+  <div id="invitation-modal" class="invitation-container hidden">
+    <div class="invitation-card">
+      <div id="invitation-content">
+        <div class="beating-heart">💖</div>
+        <h2 class="invitation-title royal-text gold-text">Bensu,</h2>
+        <p class="invitation-msg">9 aydır seni tanıyorum.
+Her geçen gün daha çok...
+
+Beraber gülmek, oyun oynamak, çay içmek istiyorum.
+
+Bu yaz bir gün... benimle çıkar mısın?</p>
+        
+        <div class="btn-wrapper">
+          <button id="evet-btn" class="royal-btn gold-btn">Evet 🎉</button>
+          <button id="hayir-btn" class="royal-btn">Hayır 😅</button>
+        </div>
+      </div>
+      
+      <!-- Inside Scroll Success View -->
+      <div id="success-view" class="success-view hidden">
+        <div class="crown-badge">👑</div>
+        <h3 class="royal-text gold-text success-title">ZAFER!</h3>
+        <div class="success-decor">👑 💛 👑</div>
+        <p class="success-msg">
+          Harika! 🎉 Seni çok sevindireceğim bir yer planlıyorum. Çok yakında mesaj atıyorum! 💛
+        </p>
+        <div class="success-celebration-emoji">🥰 🎮 🍜 🍿</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Reusable SVG definitions for gradients -->
+  <svg width="0" height="0" style="position: absolute;">
+    <defs>
+      <radialGradient id="chestGlow" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#6c63ff" stop-opacity="0.8" />
+        <stop offset="100%" stop-color="#6c63ff" stop-opacity="0" />
+      </radialGradient>
+      <linearGradient id="goldGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#ffe652" />
+        <stop offset="50%" stop-color="#ffd700" />
+        <stop offset="100%" stop-color="#c69320" />
+      </linearGradient>
+      <linearGradient id="woodGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#3d2c1f" />
+        <stop offset="100%" stop-color="#211710" />
+      </linearGradient>
+      <linearGradient id="metalGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#8a95a5" />
+        <stop offset="50%" stop-color="#4a525d" />
+        <stop offset="100%" stop-color="#23282f" />
+      </linearGradient>
+      <linearGradient id="crystalGrad" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#00ffff" />
+        <stop offset="100%" stop-color="#0088cc" />
+      </linearGradient>
+
+      <!-- Legendary Chest definitions -->
+      <linearGradient id="goldHeavy" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#fff6b3" />
+        <stop offset="30%" stop-color="#ffd700" />
+        <stop offset="70%" stop-color="#cc9b00" />
+        <stop offset="100%" stop-color="#664d00" />
+      </linearGradient>
+      <linearGradient id="legendaryBlue" x1="0" y1="0" x2="0" y2="1">
+        <stop offset="0%" stop-color="#3b5998" />
+        <stop offset="50%" stop-color="#1e2d5a" />
+        <stop offset="100%" stop-color="#0f1731" />
+      </linearGradient>
+      <linearGradient id="cyanNeon" x1="0" y1="0" x2="1" y2="0">
+        <stop offset="0%" stop-color="#00ffff" />
+        <stop offset="50%" stop-color="#7cffff" />
+        <stop offset="100%" stop-color="#00cccc" />
+      </linearGradient>
+      <radialGradient id="chestGlowLegendary" cx="50%" cy="50%" r="50%">
+        <stop offset="0%" stop-color="#00ffcc" stop-opacity="0.8" />
+        <stop offset="40%" stop-color="#6c63ff" stop-opacity="0.45" />
+        <stop offset="100%" stop-color="#6c63ff" stop-opacity="0" />
+      </radialGradient>
+      <linearGradient id="rainbowGrad" x1="0" y1="0" x2="1" y2="1">
+        <stop offset="0%" stop-color="#00ffcc" />
+        <stop offset="25%" stop-color="#00e5ff" />
+        <stop offset="50%" stop-color="#6c63ff" />
+        <stop offset="75%" stop-color="#ff4081" />
+        <stop offset="100%" stop-color="#ffd700" />
+      </linearGradient>
+    </defs>
+  </svg>
+
+  <script>
+    // --- 8-BIT AUDIO SYNTHESIZER ---
+    let audioCtx = null;
+
+    function initAudio() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx && audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+    }
+
+    function playTick() {
+      initAudio();
+      if (!audioCtx) return;
+      const osc = audioCtx.createOscillator();
+      const gain = audioCtx.createGain();
+      osc.connect(gain);
+      gain.connect(audioCtx.destination);
+      osc.frequency.setValueAtTime(750, audioCtx.currentTime);
+      osc.frequency.exponentialRampToValueAtTime(150, audioCtx.currentTime + 0.04);
+      gain.gain.setValueAtTime(0.04, audioCtx.currentTime);
+      gain.gain.exponentialRampToValueAtTime(0.005, audioCtx.currentTime + 0.04);
+      osc.start();
+      osc.stop(audioCtx.currentTime + 0.05);
+    }
+
+    function playFlip() {
+      initAudio();
+      if (!audioCtx) return;
+      const now = audioCtx.currentTime;
+      const notes = [261.63, 329.63, 392.00, 523.25]; // C4, E4, G4, C5 arpeggio
+      notes.forEach((freq, idx) => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'triangle';
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        
+        const startTime = now + idx * 0.07;
+        osc.frequency.setValueAtTime(freq, startTime);
+        osc.frequency.exponentialRampToValueAtTime(freq * 1.3, startTime + 0.12);
+        
+        gain.gain.setValueAtTime(0, now);
+        gain.gain.linearRampToValueAtTime(0.06, startTime);
+        gain.gain.exponentialRampToValueAtTime(0.005, startTime + 0.16);
+        
+        osc.start(startTime);
+        osc.stop(startTime + 0.2);
+      });
+    }
+
+    function playComplete() {
+      initAudio();
+      if (!audioCtx) return;
+      const now = audioCtx.currentTime;
+      const melody = [
+        { freq: 261.63, time: 0 },
+        { freq: 329.63, time: 0.08 },
+        { freq: 392.00, time: 0.16 },
+        { freq: 523.25, time: 0.24 },
+        { freq: 659.25, time: 0.32 },
+        { freq: 783.99, time: 0.4 },
+        { freq: 1046.50, time: 0.48 }
+      ];
+      melody.forEach(note => {
+        const osc = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        osc.type = 'sine';
+        osc.connect(gain);
+        gain.connect(audioCtx.destination);
+        
+        const startTime = now + note.time;
+        osc.frequency.setValueAtTime(note.freq, startTime);
+        gain.gain.setValueAtTime(0, now);
+        gain.gain.linearRampToValueAtTime(0.05, startTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.24);
+        
+        osc.start(startTime);
+        osc.stop(startTime + 0.3);
+      });
+    }
+
+    function playYes() {
+      initAudio();
+      if (!audioCtx) return;
+      const now = audioCtx.currentTime;
+      const chords = [261.63, 329.63, 392.00, 523.25, 659.25, 783.99, 1046.50];
+      chords.forEach((freq, idx) => {
+        const osc1 = audioCtx.createOscillator();
+        const osc2 = audioCtx.createOscillator();
+        const gain = audioCtx.createGain();
+        
+        osc1.type = 'sawtooth';
+        osc2.type = 'sine';
+        
+        osc1.connect(gain);
+        osc2.connect(gain);
+        gain.connect(audioCtx.destination);
+        
+        const startTime = now + idx * 0.04;
+        osc1.frequency.setValueAtTime(freq, startTime);
+        osc2.frequency.setValueAtTime(freq * 2, startTime);
+        
+        gain.gain.setValueAtTime(0, now);
+        gain.gain.linearRampToValueAtTime(0.04, startTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, startTime + 0.55);
+        
+        osc1.start(startTime);
+        osc2.start(startTime);
+        osc1.stop(startTime + 0.6);
+        osc2.stop(startTime + 0.6);
+      });
+    }
+
+    // --- CANVAS PARTICLE SYSTEM ---
+    class ParticleSystem {
+      constructor(canvas) {
+        this.canvas = canvas;
+        this.ctx = canvas.getContext('2d');
+        this.particles = [];
+        this.active = false;
+        this.resize();
+        window.addEventListener('resize', () => this.resize());
+      }
+
+      resize() {
+        this.canvas.width = window.innerWidth;
+        this.canvas.height = window.innerHeight;
+      }
+
+      start() {
+        this.active = true;
+        this.loop();
+      }
+
+      stop() {
+        this.active = false;
+      }
+
+      clear() {
+        this.particles = [];
+      }
+
+      addConfetti(count = 100) {
+        const colors = ['#ffd700', '#6c63ff', '#00d4aa', '#ff4081', '#00e5ff', '#ffeb3b'];
+        for (let i = 0; i < count; i++) {
+          this.particles.push({
+            type: 'confetti',
+            x: Math.random() * this.canvas.width,
+            y: -20 - Math.random() * 50,
+            vx: -2.5 + Math.random() * 5,
+            vy: 3.5 + Math.random() * 5.5,
+            w: 8 + Math.random() * 8,
+            h: 4.5 + Math.random() * 6,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            rotation: Math.random() * 360,
+            rotationSpeed: -6 + Math.random() * 12
+          });
+        }
+      }
+
+      addHearts(count = 30) {
+        for (let i = 0; i < count; i++) {
+          this.particles.push({
+            type: 'heart',
+            x: Math.random() * this.canvas.width,
+            y: this.canvas.height + 25 + Math.random() * 50,
+            vx: -1.25 + Math.random() * 2.5,
+            vy: -2 - Math.random() * 3.5,
+            size: 14 + Math.random() * 18,
+            color: `hsl(${340 + Math.random() * 25}, 100%, ${60 + Math.random() * 20}%)`,
+            opacity: 0.65 + Math.random() * 0.35
+          });
+        }
+      }
+
+      addExplosion(x, y, count = 50) {
+        const colors = ['#ffd700', '#ffe652', '#ff9f1c', '#ffffff', '#00ffcc'];
+        for (let i = 0; i < count; i++) {
+          const angle = Math.random() * Math.PI * 2;
+          const speed = 1.5 + Math.random() * 5.5;
+          this.particles.push({
+            type: 'star',
+            x: x,
+            y: y,
+            vx: Math.cos(angle) * speed,
+            vy: Math.sin(angle) * speed,
+            size: 3.5 + Math.random() * 7,
+            color: colors[Math.floor(Math.random() * colors.length)],
+            life: 1.0,
+            decay: 0.018 + Math.random() * 0.022
+          });
+        }
+      }
+
+      loop() {
+        if (!this.active) return;
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+
+        for (let i = this.particles.length - 1; i >= 0; i--) {
+          const p = this.particles[i];
+
+          // Confetti particles
+          if (p.type === 'confetti') {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.rotation += p.rotationSpeed;
+            if (p.y > this.canvas.height + 20) {
+              this.particles.splice(i, 1);
+              continue;
+            }
+
+            this.ctx.save();
+            this.ctx.translate(p.x, p.y);
+            this.ctx.rotate((p.rotation * Math.PI) / 180);
+            this.ctx.fillStyle = p.color;
+            this.ctx.fillRect(-p.w / 2, -p.h / 2, p.w, p.h);
+            this.ctx.restore();
+          } 
+          // Heart particles
+          else if (p.type === 'heart') {
+            p.x += p.vx;
+            p.y += p.vy;
+            if (p.y < -25) {
+              this.particles.splice(i, 1);
+              continue;
+            }
+
+            this.ctx.save();
+            this.ctx.globalAlpha = p.opacity;
+            this.ctx.fillStyle = p.color;
+            
+            // Draw heart shape
+            this.ctx.beginPath();
+            const topCurveHeight = p.size * 0.3;
+            this.ctx.moveTo(p.x, p.y + topCurveHeight);
+            this.ctx.bezierCurveTo(
+              p.x - p.size / 2, p.y - topCurveHeight, 
+              p.x - p.size, p.y + topCurveHeight, 
+              p.x, p.y + p.size
+            );
+            this.ctx.bezierCurveTo(
+              p.x + p.size, p.y + topCurveHeight, 
+              p.x + p.size / 2, p.y - topCurveHeight, 
+              p.x, p.y + topCurveHeight
+            );
+            this.ctx.fill();
+            this.ctx.restore();
+          }
+          // Star explosion particles
+          else if (p.type === 'star') {
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += 0.055; // gravity
+            p.life -= p.decay;
+            if (p.life <= 0) {
+              this.particles.splice(i, 1);
+              continue;
+            }
+
+            this.ctx.save();
+            this.ctx.globalAlpha = p.life;
+            this.ctx.fillStyle = p.color;
+            
+            // Draw 5-pointed star
+            this.ctx.beginPath();
+            const spikes = 5;
+            const outerRadius = p.size;
+            const innerRadius = p.size / 2;
+            let rot = (Math.PI / 2) * 3;
+            let cx = p.x;
+            let cy = p.y;
+            let x = cx;
+            let y = cy;
+            const step = Math.PI / spikes;
+
+            this.ctx.moveTo(cx, cy - outerRadius);
+            for (let j = 0; j < spikes; j++) {
+              x = cx + Math.cos(rot) * outerRadius;
+              y = cy + Math.sin(rot) * outerRadius;
+              this.ctx.lineTo(x, y);
+              rot += step;
+
+              x = cx + Math.cos(rot) * innerRadius;
+              y = cy + Math.sin(rot) * innerRadius;
+              this.ctx.lineTo(x, y);
+              rot += step;
+            }
+            this.ctx.lineTo(cx, cy - outerRadius);
+            this.ctx.closePath();
+            this.ctx.fill();
+            this.ctx.restore();
+          }
+          // Slow ambient drifting background stars
+          else if (p.type === 'back-star') {
+            p.x += p.vx;
+            p.y += p.vy;
+            if (p.y < -15 || p.x < -15 || p.x > this.canvas.width + 15) {
+              this.particles.splice(i, 1);
+              continue;
+            }
+            
+            this.ctx.save();
+            this.ctx.globalAlpha = p.opacity;
+            this.ctx.fillStyle = p.color;
+            this.ctx.beginPath();
+            this.ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+            this.ctx.fill();
+            this.ctx.restore();
+          }
+        }
+
+        requestAnimationFrame(() => this.loop());
+      }
+    }
+
+    // --- GAME INITIALIZATION & FLOW ---
+    window.addEventListener('DOMContentLoaded', () => {
+      // Setup particle system canvas
+      const canvas = document.getElementById('confetti-canvas');
+      window.particleSystem = new ParticleSystem(canvas);
+      particleSystem.start();
+      
+      // Inject persistent subtle star background particles
+      setInterval(() => {
+        if (particleSystem.particles.filter(p => p.type === 'back-star').length < 30) {
+          particleSystem.particles.push({
+            type: 'back-star',
+            x: Math.random() * canvas.width,
+            y: canvas.height + 15,
+            vx: -0.15 + Math.random() * 0.3,
+            vy: -0.2 - Math.random() * 0.4,
+            size: 0.8 + Math.random() * 1.8,
+            color: '#ffffff',
+            opacity: 0.15 + Math.random() * 0.35
+          });
+        }
+      }, 350);
+      
+      // Simulated Loading Screen Animation
+      const bar = document.getElementById('loading-bar');
+      const statusText = document.getElementById('loading-status');
+      const startBtn = document.getElementById('start-btn');
+      
+      const loadingStages = [
+        { pct: 20, text: "Anılar sandıktan çıkarılıyor..." },
+        { pct: 45, text: "İksir şişeleri dolduruluyor..." },
+        { pct: 70, text: "Clash Royale kartları karıştırılıyor..." },
+        { pct: 90, text: "Furkan'ın sürprizi hazırlanıyor..." },
+        { pct: 100, text: "Koleksiyon Hazır! 🏆" }
+      ];
+      
+      let currentPct = 0;
+      const interval = setInterval(() => {
+        currentPct += Math.floor(Math.random() * 3) + 2;
+        if (currentPct >= 100) {
+          currentPct = 100;
+          clearInterval(interval);
+          bar.style.width = '100%';
+          statusText.innerHTML = "Koleksiyon Hazır! 🏆";
+          
+          startBtn.classList.remove('hidden');
+          startBtn.style.opacity = '0';
+          startBtn.style.transition = 'opacity 0.6s ease';
+          setTimeout(() => startBtn.style.opacity = '1', 50);
+        } else {
+          bar.style.width = `${currentPct}%`;
+          const stage = loadingStages.find(s => currentPct <= s.pct) || loadingStages[loadingStages.length - 1];
+          statusText.innerHTML = `${stage.text} ${currentPct}%`;
+        }
+      }, 70);
+      
+      // Hook up start button
+      startBtn.addEventListener('click', () => {
+        initAudio();
+        playTick();
+        
+        // Hide loading screen
+        const loader = document.getElementById('loading-screen');
+        loader.classList.add('fade-out');
+        
+        // Reveal main game deck
+        const main = document.getElementById('main-content');
+        main.classList.remove('hidden');
+        
+        // Staggered layout entrance for memory cards
+        const cards = document.querySelectorAll('.card-container');
+        cards.forEach((card, idx) => {
+          setTimeout(() => {
+            card.style.opacity = '1';
+            card.style.transform = 'translateY(0) rotate(0deg) scale(1)';
+            card.style.transition = 'opacity 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.2), transform 0.6s cubic-bezier(0.175, 0.885, 0.32, 1.2)';
+          }, 300 + idx * 180);
+        });
+      });
+      
+      // Setup chest click handler
+      document.getElementById('legendary-chest').addEventListener('click', function() {
+        const chest = this;
+        if (chest.classList.contains('opening-shake')) return;
+        
+        chest.classList.add('opening-shake');
+        
+        // Rapid 8-bit tick sweep sound effect
+        let tickCount = 0;
+        const tickInterval = setInterval(() => {
+          playTick();
+          tickCount++;
+          if (tickCount >= 10) clearInterval(tickInterval);
+        }, 110);
+        
+        setTimeout(() => {
+          // Sparkle blast on screen
+          const rect = chest.getBoundingClientRect();
+          const centerX = rect.left + rect.width / 2;
+          const centerY = rect.top + rect.height / 2;
+          particleSystem.addExplosion(centerX, centerY, 130);
+          particleSystem.addConfetti(90);
+          
+          playYes();
+          
+          // Smoothly reveal proposal modal
+          document.getElementById('chest-trigger-section').classList.add('fade-out');
+          
+          setTimeout(() => {
+            document.getElementById('chest-trigger-section').classList.add('hidden');
+            const modal = document.getElementById('invitation-modal');
+            modal.classList.remove('hidden');
+            void modal.offsetWidth; // force redraw
+            modal.classList.add('active');
+          }, 800);
+        }, 1400);
+      });
+
+      // Hook up Yes button click
+      document.getElementById('evet-btn').addEventListener('click', () => {
+        playYes();
+        
+        // Trigger massive fireworks and heart drops
+        particleSystem.addConfetti(280);
+        particleSystem.addHearts(90);
+        
+        // Persistent heart rain
+        setInterval(() => {
+          particleSystem.addHearts(4);
+        }, 1000);
+        
+        // Swap content inside modal to show success message
+        document.getElementById('invitation-content').classList.add('hidden');
+        document.getElementById('success-view').classList.remove('hidden');
+      });
+
+      // Escape Logic for Hayır button
+      const hayirBtn = document.getElementById('hayir-btn');
+      let moveCount = 0;
+
+      function escapeHayir() {
+        playTick();
+        const btnRect = hayirBtn.getBoundingClientRect();
+        const pad = 24; 
+        
+        const container = document.querySelector('.invitation-card');
+        const containerRect = container.getBoundingClientRect();
+        
+        const minX = -btnRect.left + containerRect.left + pad;
+        const maxX = containerRect.right - btnRect.right - pad;
+        const minY = -btnRect.top + containerRect.top + pad;
+        const maxY = containerRect.bottom - btnRect.bottom - pad;
+        
+        const randX = minX + Math.random() * (maxX - minX);
+        const randY = minY + Math.random() * (maxY - minY);
+        
+        hayirBtn.style.position = 'absolute';
+        hayirBtn.style.left = `${randX + btnRect.left - containerRect.left}px`;
+        hayirBtn.style.top = `${randY + btnRect.top - containerRect.top}px`;
+        
+        // Change text in a playful sequence
+        moveCount++;
+        const texts = [
+          "Hayır 😅",
+          "I-ıh 😜",
+          "Yalancıktan mı? 😂",
+          "Yakalayamazsın! 🏃‍♂️",
+          "Bir daha düşün? 🤔",
+          "Cık! ❌",
+          "Israr ediyorum! 🥺",
+          "Evet de lütfen! 🙏"
+        ];
+        hayirBtn.innerText = texts[moveCount % texts.length];
+      }
+
+      hayirBtn.addEventListener('mouseenter', escapeHayir);
+      hayirBtn.addEventListener('touchstart', (e) => {
+        e.preventDefault(); 
+        escapeHayir();
+      });
+      hayirBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        escapeHayir();
+      });
+    });
+
+    // --- CARD FLIP MANAGEMENT ---
+    const flippedCards = new Set();
+
+    function flipCard(container, cardId) {
+      const card = container.querySelector('.card');
+      if (card.classList.contains('flipped')) return;
+      
+      card.classList.add('flipped');
+      playFlip();
+      
+      flippedCards.add(cardId);
+      
+      // Update counters
+      const count = flippedCards.size;
+      document.getElementById('collected-count').innerText = count;
+      
+      const elixirFill = document.getElementById('elixir-fill');
+      const elixirNum = document.getElementById('elixir-num');
+      const elixirVal = count * 2;
+      elixirFill.style.width = `${elixirVal * 10}%`;
+      elixirNum.textContent = elixirVal;
+      
+      // Card specific splash explosion
+      const rect = container.getBoundingClientRect();
+      const centerX = rect.left + rect.width / 2;
+      const centerY = rect.top + rect.height / 2;
+      particleSystem.addExplosion(centerX, centerY, 35);
+      
+      // Handle completion
+      if (count === 5) {
+        setTimeout(() => {
+          playComplete();
+          particleSystem.addConfetti(140);
+          
+          // Fade deck and details down
+          document.getElementById('cards-deck').classList.add('fade-out');
+          document.querySelector('.status-panel').classList.add('fade-out');
+          
+          setTimeout(() => {
+            document.getElementById('cards-deck').classList.add('hidden');
+            document.querySelector('.status-panel').classList.add('hidden');
+            document.getElementById('chest-trigger-section').classList.remove('hidden');
+          }, 800);
+        }, 1100);
+      }
+    }
+  </script>
+</body>
+</html>

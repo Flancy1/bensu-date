@@ -1,0 +1,77 @@
+Create a single self-contained HTML file at /root/bensu-date/index.html (no external dependencies, all CSS/JS inline) that is an interactive "memory card" game to ask a girl named Bensu out on a date. This is for my friend Furkan who has known Bensu for 9 months — they have inside jokes and a playful dynamic.
+
+## DESIGN REQUIREMENTS
+
+### Visual Theme
+- Clash Royale-inspired: dark navy/charcoal background (#1a1a2e or similar), gold accent (#ffd700), warm purple (#6c63ff), teal (#00d4aa)
+- Card-based UI with flip animations (like collecting cards)
+- Playful, game-like, but warm and personal
+- Turkish language throughout
+- Responsive design (works on mobile too)
+- Smooth animations and transitions
+
+### Interactive Flow
+
+#### 1. LOADING SCREEN
+- Title: "Bensu için özel bir şey..."
+- A loading bar that fills up with gold color
+- After loading completes, transitions to main screen
+
+#### 2. MEMORY CARDS (5 cards)
+Each card represents a shared memory. They appear one by one with a stagger animation. Each card has a front (question mark / locked) and back (memory revealed).
+
+Card 1 — 📝 "Kalem & Mandalina"
+- Front: "İlk anımız" with ❓
+- Back text: "Bir kalem istemiştim, mandalina teklif etmiştin. 'Süper kalmiş, garanti veremem her an bozulabilir' demiştin. O gün anladım seninle eğlenebileceğimi."
+
+Card 2 — 🥜 "Yer Fıstığı"
+- Front: "Sözümü tuttum" with 🥜
+- Back text: "Osmaniye'den fıstık getirmiştim, söz vermiştim çünkü. 'Oha nasıl hatırlıyorsun' demiştin. Her şeyi hatırlıyorum Bensu."
+
+Card 3 — 📱 "Telefon Süsü"
+- Front: "Hiç beklemiyordun" with 📱
+- Back text: "Kardeşime telefon süsü alacaktım, sen bulup getirmiştin bile. Kimse arkadaşına böyle bir şey yapmaz. Bu kadar tatlı olmak zorunda mısın?"
+
+Card 4 — 🎮 "Clash Royale"
+- Front: "Gece 2'ye kadar" with 🎮
+- Back text: "Sınavdan bir gece önce 2'ye kadar yazışmıştık. Ve sen bana Clash'ten ekran görüntüsü atıp 'duo lazımsa haber et' demiştin. Oyun bahaneydi, seni görmek istemiştin."
+
+Card 5 — 🍜 "İlk Yemek"
+- Front: "Son buluşma" with 🍜
+- Back text: "Finalden sonra ilk kez birlikte yemek yemiştik. 'Kore'den bana bir şey getirmedin mi' diye sormuştun. Maskeni hâlâ vermedim... belki yüz yüze veririm?"
+
+#### 3. COLLECTION COMPLETE
+- After all 5 cards flipped, a "✨ Koleksiyon Tamamlandı!" celebration animation
+- Fireworks or sparkle particles on screen
+
+#### 4. THE INVITATION
+- A big, beautifully styled question appears:
+"Bensu,
+9 aydır seni tanıyorum.
+Her geçen gün daha çok...
+Beraber gülmek, oyun oynamak, çay içmek istiyorum.
+Bu yaz bir gün... benimle çıkar mısın?"
+
+- Two buttons:
+  - "Evet 🎉" — big, gold, shining button
+  - "Hayır 😅" — small, when hovered it moves away playfully (cannot be clicked)
+
+- When "Evet" is clicked:
+  - HUGE celebration: confetti, sparkles, animated hearts
+  - Text: "Harika! 🎉 Seni çok sevindireceğim bir yer planlıyorum. Çok yakında mesaj atıyorum! 💛" (This is what Furkan will see after she says yes)
+
+### Technical Requirements
+- Pure HTML/CSS/JS, single file (index.html)
+- NO external libraries or CDN — everything self-contained
+- All text in Turkish
+- Works by just opening index.html in any modern browser (no server needed)
+- Card flip uses CSS 3D transforms
+- Smooth transitions with CSS animations
+- Local fallback font stack
+- Mobile-friendly with touch support for card flipping
+
+### File Output
+Write to: /root/bensu-date/index.html
+(Only this single file, no other files needed)
+
+Make it beautiful, polished, and emotionally resonant. This is going to be used to ask someone out — make it special.
